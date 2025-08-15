@@ -8,7 +8,7 @@ from .views import (
 )
 
 urlpatterns = [
-    # API - Type lists (list all or create, get/update/delete one)
+    # APIi - Type lists (list all or create, get/update/delete one)
     path("type-lists/", TypeToDoListListCreateView.as_view(), name="typelist-list-create"),
     path("type-lists/<int:pk>/", TypeToDoListDetailView.as_view(), name="typelist-detail"),
 
