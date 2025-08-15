@@ -1,0 +1,23 @@
+{% extends "planner/base.html" %}
+{% block title %}{{ is_edit|yesno:"Edit task,Create task" }} – MyPlanner{% endblock %}
+
+{% block content %}
+  <!-- Create/Edit task form -->
+  <h1>{{ is_edit|yesno:"Edit task,Create task" }}</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">
+      {{ is_edit|yesno:"Save changes,Create" }}
+    </button>
+  </form>
+
+  <p>
+    {% if is_edit and task %}
+      <a href="{% url 'html-task_detail' task.pk %}">Back to detail</a>
+    {% else %}
+      <a href="{% url 'html-task_list' %}">Back to list</a>
+    {% endif %}
+  </p>
+{% endblock %}

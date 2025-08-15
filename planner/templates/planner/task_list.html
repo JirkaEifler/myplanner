@@ -1,0 +1,32 @@
+{% extends "planner/base.html" %}
+{% block title %}Tasks – MyPlanner{% endblock %}
+
+{% block content %}
+  <!-- Table of user's tasks -->
+  <h1>My tasks</h1>
+
+  <p><a href="{% url 'html-task_create' %}" class="btn">Create task</a></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>List</th>
+        <th>Due date</th>
+        <th>Done</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in tasks %}
+        <tr>
+          <td><a href="{% url 'html-task_detail' t.pk %}">{{ t.title }}</a></td>
+          <td>{{ t.list.name }}</td>
+          <td>{{ t.due_date|date:"Y-m-d"|default:"—" }}</td>
+          <td>{{ t.is_completed|yesno:"✓, " }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4">No tasks yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

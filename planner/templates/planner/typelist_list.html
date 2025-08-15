@@ -1,0 +1,35 @@
+{% extends "planner/base.html" %}
+{% block title %}Lists – MyPlanner{% endblock %}
+
+{% block content %}
+  <!-- Table of user's lists with task counters -->
+  <h1>Lists</h1>
+
+  <p><a class="btn" href="{% url 'html-list_create' %}">Create list</a></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Tasks</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for l in lists %}
+        <tr>
+          <td><a href="{% url 'html-list_detail' l.pk %}">{{ l.name }}</a></td>
+          <td>{{ l.task_count }}</td>
+          <td>
+            <a href="{% url 'html-list_edit' l.pk %}">Edit</a> |
+            <a href="{% url 'html-list_delete' l.pk %}">Delete</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">No lists found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

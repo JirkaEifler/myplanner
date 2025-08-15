@@ -1,0 +1,36 @@
+{% extends "planner/base.html" %}
+{% block title %}List detail – MyPlanner{% endblock %}
+
+{% block content %}
+  <!-- Single list detail + its tasks -->
+  <h1>List: {{ list.name }}</h1>
+
+  <p>
+    <a class="btn" href="{% url 'html-list_edit' list.pk %}">Edit list</a>
+    <a class="btn" href="{% url 'html-list_delete' list.pk %}">Delete list</a>
+    <a class="btn" href="{% url 'html-task_create' %}?list={{ list.pk }}">Create task in this list</a>
+    <a class="btn" href="{% url 'html-list_index' %}">Back to lists</a>
+  </p>
+
+  <h2>Tasks in this list</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Due date</th>
+        <th>Done</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in tasks %}
+        <tr>
+          <td><a href="{% url 'html-task_detail' t.pk %}">{{ t.title }}</a></td>
+          <td>{{ t.due_date|date:"Y-m-d"|default:"—" }}</td>
+          <td>{{ t.is_completed|yesno:"✓," }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3">No tasks in this list.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

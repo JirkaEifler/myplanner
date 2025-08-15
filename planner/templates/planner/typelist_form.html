@@ -1,0 +1,17 @@
+{% extends "planner/base.html" %}
+{% block title %}{{ is_edit|yesno:"Edit list,Create list" }} – MyPlanner{% endblock %}
+
+{% block content %}
+  <!-- Create/Edit form for a list -->
+  <h1>{{ is_edit|yesno:"Edit list,Create list" }}</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">
+      {{ is_edit|yesno:"Save changes,Create" }}
+    </button>
+  </form>
+
+  <p><a href="{% url 'html-list_index' %}">Back to lists</a></p>
+{% endblock %}

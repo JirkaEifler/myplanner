@@ -1,0 +1,23 @@
+{% extends "planner/base.html" %}
+{% block title %}Task detail – MyPlanner{% endblock %}
+
+{% block content %}
+  <!-- Single task detail -->
+  <h1>Task detail</h1>
+
+  <p><strong>Title:</strong> {{ task.title }}</p>
+
+  {% if task.description %}
+    <p><strong>Description:</strong><br>{{ task.description|linebreaksbr }}</p>
+  {% endif %}
+
+  <p><strong>List:</strong> {{ task.list.name }}</p>
+  <p><strong>Due date:</strong> {{ task.due_date|date:"Y-m-d"|default:"—" }}</p>
+  <p><strong>Completed:</strong> {{ task.is_completed|yesno:"Yes,No" }}</p>
+
+  <p>
+    <a class="btn" href="{% url 'html-task_list' %}">Back to list</a>
+    <a class="btn" href="{% url 'html-task_edit' task.pk %}">Edit</a>
+    <a class="btn" href="{% url 'html-task_delete' task.pk %}">Delete</a>
+  </p>
+{% endblock %}

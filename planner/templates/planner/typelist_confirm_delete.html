@@ -1,0 +1,14 @@
+{% extends "planner/base.html" %}
+{% block title %}Delete list – MyPlanner{% endblock %}
+
+{% block content %}
+  <!-- Confirmation dialog for deleting a list -->
+  <h1>Delete list</h1>
+  <p>Are you sure you want to delete the list <strong>{{ obj.name }}</strong>?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, delete</button>
+    <a href="{% url 'html-list_index' %}" class="btn">Cancel</a>
+  </form>
+{% endblock %}

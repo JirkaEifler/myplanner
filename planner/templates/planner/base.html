@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{% block title %}MyPlanner{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
+    header { display:flex; gap:16px; align-items:center; margin-bottom:20px; }
+    nav a { margin-right:12px; text-decoration:none; }
+    .btn { padding:6px 10px; border:1px solid #ccc; border-radius:6px; background:#f6f6f6; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+    th { background:#fafafa; text-align:left; }
+    .btn-danger { border-color:#e0b4b4; background:#fbeaea; }
+  </style>
+</head>
+<body>
+  <!-- Base layout with top navigation -->
+  <header>
+    <strong>MyPlanner</strong>
+    <nav>
+      <a href="/app/lists/">Lists</a>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="/app/tasks/">Tasks</a>
+      <a href="{% url 'html-task_create' %}" class="btn">Create task</a>
+      <a href="/admin/">Admin</a>
+      {% if user.is_authenticated %}
+        <a href="/api-auth/logout/">Logout</a>
+      {% else %}
+        <a href="/api-auth/login/">Login</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <!-- Flash messages -->
+  {% if messages %}
+    <div style="margin: 12px 0;">
+      {% for message in messages %}
+        <div
+          style="
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+            {% if message.tags == 'success' %}background:#effaf0;{% endif %}
+            {% if message.tags == 'error' %}background:#fdecea;{% endif %}
+            {% if message.tags == 'warning' %}background:#fff4e5;{% endif %}
+            {% if message.tags == 'info' %}background:#eef5ff;{% endif %}
+          "
+        >
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</body>
+</html>
