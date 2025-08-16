@@ -14,7 +14,7 @@ Application data models:
 class TypeToDoList(models.Model):
     """Type of to-do list (e.g., daily, weekly, shopping, birthdays)."""
     name = models.CharField(max_length=100)
-    owner = models.ForeignKey(
+    owner = models.ForeignKey( # ForeignKey na model uživatele - každý typ seznamu patří jednomu konkrétnímu uživateli (user_id).
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="typelists",
@@ -40,19 +40,19 @@ class Task(models.Model):
     is_completed = models.BooleanField(default=False)
 
     # relations
-    list = models.ForeignKey( # každý úkol patří do jednoho seznamu úkolů
+    list = models.ForeignKey( # ForeignKey na TypeToDoList - každý úkol patří právě jednomu seznamu (list_id).
         TypeToDoList,
         on_delete=models.CASCADE,
         related_name="tasks",
         help_text="List to which this task belongs.",
     )
-    users = models.ManyToManyField( # jeden úkol může mít více spolupracovníků a jeden uživatel může spolupracovat na více úkolech.
+    users = models.ManyToManyField( # ManyToManyField na uživatele - jeden úkol může mít více spolupracovníků a jeden uživatel může spolupracovat na více úkolech.
         settings.AUTH_USER_MODEL,
         blank=True,
         related_name="collaborating_tasks", # user.collaborating_tasks.all()).
         help_text="Optional collaborators on this task.",
     )
-    owner = models.ForeignKey( # cizí klíč na model uživatele - pro hlavního vlastníka úkolu.
+    owner = models.ForeignKey( # ForeignKey na model uživatele – každý úkol má uloženého svého hlavního vlastníka (user_id).
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="tasks", # user.tasks.all()
@@ -71,7 +71,7 @@ class Task(models.Model):
 
 class Reminder(models.Model):
     """Reminder bound to a specific task."""
-    task = models.ForeignKey( # cizí klíč na model Task - každá připomínka patří právě jednomu úkolu.
+    task = models.ForeignKey( # ForeignKey na Task - každá připomínka je propojena s jedním konkrétním úkolem (task_id).
         Task,
         on_delete=models.CASCADE,
         related_name="reminders",
@@ -90,7 +90,7 @@ class Reminder(models.Model):
 class Tag(models.Model):
     """Tag/label that can be attached to many tasks (e.g. work, personal, shopping)."""
     name = models.CharField(max_length=255, unique=True)
-    tasks = models.ManyToManyField(Task, related_name="tags") # Jeden tag může být přiřazen k více úkolům, jeden úkol může mít více tagů.
+    tasks = models.ManyToManyField(Task, related_name="tags") # ManyToManyField na Task - jeden tag může být přiřazen k více úkolům a jeden úkol může mít více tagů.
 
     class Meta:
         ordering = ["name"]
@@ -103,8 +103,7 @@ class Tag(models.Model):
 
 class Event(models.Model):
     """Event with fixed start/end time attached to a task."""
-    task = models.OneToOneField( # vztah One-to-One na model Task.
-        # Každá událost je přiřazena přesně k jednomu úkolu a ten úkol má právě jednu událost.
+    task = models.OneToOneField( # OneToOneField na Task - každá událost je svázaná s jedním konkrétním úkolem a úkol má právě jednu událost.
         Task,
         on_delete=models.CASCADE,
         related_name="event",
