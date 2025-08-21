@@ -1,32 +1,140 @@
 {% extends "planner/base.html" %}
-{% block title %}Tasks – MyPlanner{% endblock %}
+{% block nav_tasks %}is-active{% endblock %}
+{% load static %}
+{% load planner_extras %}
+{% block title %}All My Tasks – MyPlanner{% endblock %}
+
+{% block extra_css %}
+  <!-- tabulkové styly pro Task list -->
+  <link rel="stylesheet" href="{% static 'planner/css/tasks.css' %}?v=3">
+{% endblock %}
 
 {% block content %}
-  <!-- Table of user's tasks -->
-  <h1>My tasks</h1>
+  <div class="table-wrap">
+    <h1>All My Tasks</h1>
 
-  <p><a href="{% url 'html-task_create' %}" class="btn">Create task</a></p>
+    <!-- horní akční lišta -->
+    <div class="toolbar">
+      <a class="btn btn--primary" href="{% url 'html-task_create' %}">+ Create new task</a>
+    </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>List</th>
-        <th>Due date</th>
-        <th>Done</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for t in tasks %}
+    <!-- hlavní tabulka -->
+    <table>
+      <colgroup> <!-- poměr šířek sloupců -->
+        <col class="col-list"    style="width:32%;">
+        <col class="col-title"   style="width:30%;">
+        <col class="col-date"    style="width:20%;">
+        <col class="col-done"    style="width:10%;">
+        <col class="col-actions" style="width:8%;">
+      </colgroup>
+
+      <thead>
         <tr>
-          <td><a href="{% url 'html-task_detail' t.pk %}">{{ t.title }}</a></td>
-          <td>{{ t.list.name }}</td>
-          <td>{{ t.due_date|date:"Y-m-d"|default:"—" }}</td>
-          <td>{{ t.is_completed|yesno:"✓, " }}</td>
+          <th class="col-list">Open list detail</th>
+          <th class="col-title">Open task detail</th>
+          <th class="col-date">Due date</th>
+          <th class="col-done">Done</th>
+          <th class="col-actions">Actions</th>
         </tr>
-      {% empty %}
-        <tr><td colspan="4">No tasks yet.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+
+      <tbody>
+        {% for t in tasks %}
+          <tr>
+            <!-- sloupec List: odkaz na detail listu -->
+            <td class="col-list">
+                <a class="chip"
+                   style="--hue: {{ t.list.name|list_hue }};"
+                   href="{% url 'html-list_detail' t.list.pk %}?from=tasks">
+                  {{ t.list.name }}
+                </a>
+            </td>
+
+            <!-- sloupec Task: odkaz na detail úkolu -->
+            <td class="col-title">
+              <div class="title-wrap">
+                <a class="chip"
+                   style="--hue: {{ t.list.name|list_hue }};"
+                   href="{% url 'html-task_detail' t.pk %}">
+                  {{ t.title }}
+                </a>
+              </div>
+            </td>
+
+            <!-- sloupec Due date -->
+            <td class="col-date">
+              {{ t.due_date|date:"M. d, Y"|default:"—" }}
+            </td>
+
+            <!-- sloupec Done: rychlé zaškrtnutí (AJAX) -->
+            <td class="col-done done-cell">
+              <input
+                type="checkbox"
+                class="js-done-toggle"
+                data-id="{{ t.pk }}"
+                {% if t.is_completed %}checked{% endif %}
+              />
+            </td>
+
+            <!-- sloupec Actions -->
+            <td class="col-actions">
+              <a class="btn-sm" href="{% url 'html-task_edit' t.pk %}">Edit</a>
+              <a class="btn-sm btn-sm--warn" href="{% url 'html-task_delete' t.pk %}">Delete</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5" class="empty">No tasks found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- AJAX přepínání "Done" s CSRF ochranou -->
+  <script>
+    // vytáhne CSRF token z cookies
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    // obsluha všech checkboxů v tabulce
+    document.querySelectorAll('.js-done-toggle').forEach(cb => {
+      cb.addEventListener('change', async (e) => {
+        const el = e.currentTarget;
+        const taskId = el.getAttribute('data-id');
+        const url = "{% url 'html-task_toggle_done' 0 %}".replace('/0/', `/${taskId}/`);
+
+        // pro případ selhání requestu (optimistic UI)
+        const previous = !el.checked;
+
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': csrftoken,
+              'X-Requested-With': 'XMLHttpRequest',
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ done: el.checked })
+          });
+
+          if (!res.ok) throw new Error('Network error');
+
+          const data = await res.json();
+          if (!data.ok) {
+            el.checked = previous; // revert
+            alert('Could not update task.');
+          }
+        } catch (err) {
+          el.checked = previous; // revert
+          alert('Connection problem. Try again.');
+        }
+      });
+    });
+  </script>
 {% endblock %}

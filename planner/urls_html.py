@@ -1,4 +1,3 @@
-# planner/urls_html.py
 from django.urls import path
 from . import views_html as views
 
@@ -19,4 +18,7 @@ urlpatterns = [
     path("app/lists/<int:pk>/", views.html_list_detail, name="html-list_detail"),
     path("app/lists/<int:pk>/edit/", views.html_list_edit, name="html-list_edit"),
     path("app/lists/<int:pk>/delete/", views.html_list_delete, name="html-list_delete"),
+
+    # Toggle "done" (AJAX)
+    path("tasks/<int:pk>/toggle-done/", views.toggle_task_done, name="html-task_toggle_done"),
 ]

@@ -1,17 +1,36 @@
 {% extends "planner/base.html" %}
-{% block title %}{{ is_edit|yesno:"Edit list,Create list" }} – MyPlanner{% endblock %}
+{% block nav_lists %}is-active{% endblock %}
+
+<!-- Titulek stránky podle režimu -->
+{% block title %}{% if is_edit %}Edit list{% else %}Create list{% endif %} – MyPlanner{% endblock %}
 
 {% block content %}
-  <!-- Create/Edit form for a list -->
-  <h1>{{ is_edit|yesno:"Edit list,Create list" }}</h1>
+  <!-- Nadpis podle režimu -->
+  <h1>{% if is_edit %}Edit list{% else %}Create list{% endif %}</h1>
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn">
-      {{ is_edit|yesno:"Save changes,Create" }}
-    </button>
-  </form>
+  <!-- Plátno se standardní max šířkou -->
+  <div class="table-wrap" style="max-width:520px;margin:0 auto;">
+    <form method="post" novalidate>
+      {% csrf_token %}
 
-  <p><a href="{% url 'html-list_index' %}">Back to lists</a></p>
+      <!-- Jednoduché vykreslení polí formuláře -->
+      {{ form.as_p }}
+
+      <!-- Akce formuláře: Submit + Back (bez JS) -->
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:10px;">
+        <button class="btn btn--primary" type="submit">
+          {% if is_edit %}Save{% else %}Create{% endif %}
+        </button>
+
+        <!-- Back bez history:
+           - při editaci zpět na detail daného listu
+           - při vytváření zpět na přehled všech listů -->
+        {% if is_edit and form.instance.pk %}
+          <a class="btn btn-outline" href="{% url 'html-list_detail' form.instance.pk %}">Back</a>
+        {% else %}
+          <a class="btn btn-outline" href="{% url 'html-list_index' %}">Back</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
 {% endblock %}

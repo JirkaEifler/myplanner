@@ -1,23 +1,57 @@
 {% extends "planner/base.html" %}
+{% load static %}
+{% load planner_extras %}
 {% block title %}Task detail – MyPlanner{% endblock %}
 
 {% block content %}
-  <!-- Single task detail -->
   <h1>Task detail</h1>
 
-  <p><strong>Title:</strong> {{ task.title }}</p>
+  <div class="table-wrap" style="max-width:720px;margin:0 auto;">
+    <table class="compact">
+      <colgroup>
+        <col style="width:30%;">
+        <col style="width:70%;">
+      </colgroup>
+      <tbody>
+        <tr>
+          <th>Title</th>
+          <td>{{ task.title }}</td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>{{ task.description|linebreaksbr|default:"—" }}</td>
+        </tr>
+        <tr>
+          <th>List</th>
+          <td>
+            <a class="chip"
+               style="--hue: {{ task.list.name|list_hue }};"
+               href="{% url 'html-list_detail' task.list.pk %}">
+              {{ task.list.name }}
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th>Due date</th>
+          <td>{{ task.due_date|date:"M. d, Y"|default:"—" }}</td>
+        </tr>
+        <tr>
+          <th>Completed</th>
+          <td>{% if task.is_completed %}Yes{% else %}No{% endif %}</td>
+        </tr>
+      </tbody>
+    </table>
 
-  {% if task.description %}
-    <p><strong>Description:</strong><br>{{ task.description|linebreaksbr }}</p>
-  {% endif %}
+    <!-- Akce pod tabulkou -->
+        <div class="action-group" style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
+            <a class="btn" href="{% url 'html-task_edit' task.pk %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'html-task_delete' task.pk %}">Delete</a>
 
-  <p><strong>List:</strong> {{ task.list.name }}</p>
-  <p><strong>Due date:</strong> {{ task.due_date|date:"Y-m-d"|default:"—" }}</p>
-  <p><strong>Completed:</strong> {{ task.is_completed|yesno:"Yes,No" }}</p>
-
-  <p>
-    <a class="btn" href="{% url 'html-task_list' %}">Back to list</a>
-    <a class="btn" href="{% url 'html-task_edit' task.pk %}">Edit</a>
-    <a class="btn" href="{% url 'html-task_delete' task.pk %}">Delete</a>
-  </p>
+            {% if back_url %}
+                <a class="btn" href="{{ back_url }}">Back</a>
+            {% else %}
+                <a class="btn" href="{% url 'html-task_list' %}">Back</a>
+            {% endif %}
+        </div>
+  </div>
 {% endblock %}

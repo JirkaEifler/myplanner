@@ -62,7 +62,7 @@ class Task(models.Model):
     )
 
     class Meta:
-        ordering = ["title"]
+        ordering = ['list__name', 'title']
 
     def __str__(self):
         status = "Completed" if self.is_completed else "Incomplete"

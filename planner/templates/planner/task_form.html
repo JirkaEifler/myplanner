@@ -1,23 +1,91 @@
 {% extends "planner/base.html" %}
-{% block title %}{{ is_edit|yesno:"Edit task,Create task" }} – MyPlanner{% endblock %}
+{% block nav_tasks %}is-active{% endblock %}
+{% load static %}
+
+{% block title %}
+  {% if form.instance.pk %}Edit task – MyPlanner{% else %}Create task – MyPlanner{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'planner/css/forms.css' %}?v=3">
+{% endblock %}
 
 {% block content %}
-  <!-- Create/Edit task form -->
-  <h1>{{ is_edit|yesno:"Edit task,Create task" }}</h1>
+  <h1>{% if form.instance.pk %}Edit task{% else %}Create task{% endif %}</h1>
 
-  <form method="post">
+  <form method="post" novalidate class="form-card">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn">
-      {{ is_edit|yesno:"Save changes,Create" }}
-    </button>
-  </form>
 
-  <p>
-    {% if is_edit and task %}
-      <a href="{% url 'html-task_detail' task.pk %}">Back to detail</a>
-    {% else %}
-      <a href="{% url 'html-task_list' %}">Back to list</a>
-    {% endif %}
-  </p>
+    <div class="form-grid">
+      <!-- Title -->
+      <div class="form-row span-2">
+        <label for="{{ form.title.id_for_label }}">Title</label>
+        {{ form.title }}
+        {% if form.title.errors %}<div class="err">{{ form.title.errors }}</div>{% endif %}
+      </div>
+
+      <!-- Description -->
+      <div class="form-row span-2">
+        <label for="{{ form.description.id_for_label }}">Description</label>
+        {{ form.description }}
+        {% if form.description.errors %}<div class="err">{{ form.description.errors }}</div>{% endif %}
+      </div>
+
+      <!-- Due date + Clear (jeden řádek přes celou šířku) -->
+      <div class="form-row span-2">
+        <label for="{{ form.due_date.id_for_label }}">Due date</label>
+        <div class="date-input-wrapper">
+          {{ form.due_date }}
+          <button type="button" id="clear-date" class="btn btn-ghost small-btn">Clear</button>
+        </div>
+        {% if form.due_date.errors %}<div class="err">{{ form.due_date.errors }}</div>{% endif %}
+      </div>
+
+      <!-- Is completed (samostatný řádek pod datem) -->
+      <div class="form-row span-2 checkbox-inline">
+        {{ form.is_completed }}
+        <label for="{{ form.is_completed.id_for_label }}">Is completed</label>
+        {% if form.is_completed.errors %}<div class="err">{{ form.is_completed.errors }}</div>{% endif %}
+      </div>
+
+      <!-- List -->
+      <div class="form-row span-2">
+        <label for="{{ form.list.id_for_label }}">List</label>
+        {{ form.list }}
+        {% if form.list.errors %}<div class="err">{{ form.list.errors }}</div>{% endif %}
+      </div>
+    </div>
+
+    <!-- Akce -->
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">
+        {% if form.instance.pk %}Save{% else %}Create{% endif %}
+      </button>
+
+      {# Back – preferuj back_url ze session (předán z view), jinak fallbacky #}
+      {% if back_url %}
+        <a class="btn btn-outline" href="{{ back_url }}">Back</a>
+      {% elif form.instance.pk %}
+        <a class="btn btn-outline" href="{% url 'html-task_detail' form.instance.pk %}">Back</a>
+      {% elif request.GET.list %}
+        <a class="btn btn-outline" href="{% url 'html-list_detail' request.GET.list %}">Back</a>
+      {% else %}
+        <a class="btn btn-outline" href="{% url 'html-list_index' %}">Back</a>
+      {% endif %}
+    </div>
+  </form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function () {
+    var clearBtn = document.getElementById('clear-date');
+    var dateInput = document.getElementById('{{ form.due_date.id_for_label }}');
+    if (clearBtn && dateInput) {
+      clearBtn.addEventListener('click', function () {
+        dateInput.value = '';
+      });
+    }
+  })();
+</script>
 {% endblock %}

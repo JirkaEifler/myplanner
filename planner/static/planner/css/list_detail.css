@@ -1,0 +1,75 @@
+/* ===== Canvas ===== */
+.table-wrap {
+  max-width: 1040px;   /* sjednoceno se všemi tabulkami */
+  margin: 0 auto;
+}
+
+/* ===== Table ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;   /* stejné jako v lists.css a tasks.css */
+}
+th, td {
+  border: 1px solid #e5e7eb;
+  padding: 8px 10px;
+  vertical-align: middle;
+}
+th {
+  background: #fafafa;
+  text-align: center;   /* všechny hlavičky vycentrované */
+}
+
+/* Sloupce */
+.col-title   { width: 60%; text-align: center; }
+.col-date    { width: 20%; text-align: center; }
+.col-done    { width: 20%; text-align: center; }
+
+/* ===== Chips ===== */
+.title-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid hsl(var(--hue, 120) 45% 50%);
+  background: hsl(var(--hue, 120) 60% 92%);
+  color: #111;
+  text-decoration: none;
+  font-size: 0.95rem;   /* stejné jako ostatní tabulky */
+  transition: background .15s ease, border-color .15s ease, filter .15s ease;
+}
+.chip:hover {
+  background: hsl(var(--hue, 120) 60% 85%);
+  border-color: hsl(var(--hue, 120) 45% 40%);
+  text-decoration: underline;
+}
+
+/* ===== Empty state ===== */
+.empty {
+  text-align: center;
+  color: #6b7280;
+  padding: 14px 0;
+}
+
+/* ===== Title chip in List Detail ===== */
+h1 .chip {
+  font-size: 1.6rem;     /* zvětší písmo jen v nadpisu */
+  padding: 0.6em 1.4em;  /* dá tomu víc prostoru */
+}
+
+
+/* Done cell */
+.done-cell{
+  text-align:center;
+}
+.done-cell input[type="checkbox"]{
+  transform: scale(1.25);
+  cursor: pointer;
+  accent-color: #16a34a; /* hezká zelená po zaškrtnutí (moderní prohlížeče) */
+}

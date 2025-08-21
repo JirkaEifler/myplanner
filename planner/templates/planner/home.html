@@ -1,8 +1,30 @@
 {% extends "planner/base.html" %}
+
+<!--
+  home.html
+  ----------
+  Domovská stránka aplikace.
+  - Dědí rozvržení z base.html (menu, zprávy, layout).
+  - Pomocí bloků nastavuje aktivní záložku v menu a titulek stránky.
+  - Blok "content" obsahuje samotný obsah homepage.
+-->
+
+<!-- Aktivní záložka v horním menu -->
+{% block nav_home %}is-active{% endblock %}
+
+<!-- Titulek stránky (do <title>) -->
 {% block title %}Home – MyPlanner{% endblock %}
 
+<!-- Hlavní obsah stránky -->
 {% block content %}
-  <!-- Simple landing page with quick actions -->
-  <h1>Welcome to MyPlanner</h1>
-  <p>Manage your tasks, lists, and deadlines. Use the top menu to navigate.</p>
+  <div class="centered">
+    <h1 class="main-title">Welcome to MyPlanner</h1>
+
+    <!-- Motto s barevnými akcenty -->
+    <p class="subtitle">
+      🗂️<span style="color: purple; font-weight: 600;">Organize smarter</span>,
+      🚀<span style="color: darkgreen; font-weight: 600;">plan faster</span>,
+      🌿<span style="color: darkorange; font-weight: 600;">live easier</span>!
+    </p>
+  </div>
 {% endblock %}

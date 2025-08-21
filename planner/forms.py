@@ -10,6 +10,7 @@ class TaskForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs) # Voláme původní konstruktor rodičovské třídy ModelForm
         self.fields["list"].queryset = TypeToDoList.objects.filter(owner=user).order_by("name")
+        self.fields["due_date"].required = False
 
     class Meta:
         model = Task

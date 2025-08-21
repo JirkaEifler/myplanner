@@ -1,0 +1,111 @@
+/* ===== Canvas ===== */
+.table-wrap{
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.toolbar{
+  text-align:center;
+  margin: 10px 0 14px;
+}
+
+/* ===== Table ===== */
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size: 0.95rem;
+}
+th, td{
+  border:1px solid #ddd;
+  padding:8px 10px;
+  vertical-align: middle;
+}
+th{ background:#fafafa; }
+
+/* vycentrované hlavičky */
+th.col-title,
+th.col-list,
+th.col-date,
+th.col-done,
+th.col-actions{
+  text-align:center;
+}
+
+/* zarovnání buněk (šířky řeší <colgroup> v šabloně) */
+.col-list   { text-align:center; }
+.col-date   { text-align:center; white-space: nowrap; }
+.col-done   { text-align:center; }
+.col-actions{ text-align:center; white-space: nowrap; }
+
+/* title cell layout */
+.title-wrap{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+}
+
+/* chips barvené přes --hue */
+.col-title .chip,
+.col-list  .chip{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:12px;
+  border:1px solid hsl(var(--hue, 120) 45% 50%);
+  background:hsl(var(--hue, 120) 60% 92%);
+  color:#111;
+  text-decoration:none;
+  transition: background .15s ease, border-color .15s ease;
+  white-space: nowrap;
+}
+.col-title .chip:hover,
+.col-list  .chip:hover{
+  background:hsl(var(--hue, 120) 60% 85%);
+  border-color:hsl(var(--hue, 120) 45% 40%);
+  text-decoration:underline;
+}
+
+/* Done cell */
+.done-cell{ text-align:center; }
+.done-cell input[type="checkbox"]{
+  transform: scale(1.25);
+  cursor: pointer;
+  accent-color: #16a34a; /* moderní prohlížeče */
+}
+
+/* Actions – pilly vedle sebe */
+.col-actions{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+
+/* malé akční pilly */
+.btn-sm{
+  display:inline-block;
+  padding:6px 12px;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  background:#f6f6f6;
+  text-decoration:none;
+  transition: filter .15s ease, border-color .15s ease;
+}
+.btn-sm:hover{
+  filter: brightness(0.96);   /* ztmavení při hoveru */
+  border-color:#c7cdd6;
+}
+.btn-sm:focus-visible{
+  outline:2px solid var(--accent, #6b21a8);
+  outline-offset:2px;
+}
+.btn-sm--warn{
+  border-color:#ffb1b1;
+  background:#ffecec;
+}
+
+/* Empty stav */
+.empty{
+  text-align:center;
+  color:#6b7280;
+  padding:14px 0;
+}

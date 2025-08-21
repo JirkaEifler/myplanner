@@ -16,13 +16,6 @@
   <p><a class="btn" href="{% url 'html-list_create' %}">+ Create new list</a></p>
 
   <table>
-    <!-- pevné rozdělení šířek sloupců, aby se Actions nepřeléval -->
-    <colgroup>
-      <col class="col-name"    style="width:36%;">
-      <col class="col-count"   style="width:16%;">
-      <col class="col-actions" style="width:48%;">
-    </colgroup>
-
     <thead>
       <tr>
         <th class="col-name">Open list detail</th>
@@ -42,9 +35,7 @@
               </a>
             </div>
           </td>
-
           <td class="col-count">{{ l.task_count }}</td>
-
           <td class="col-actions">
             <div class="action-group">
               <a class="btn-sm btn-sm--primary" href="{% url 'html-task_create' %}?list={{ l.pk }}">Add task to this list</a>

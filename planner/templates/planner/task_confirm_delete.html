@@ -1,13 +1,28 @@
 {% extends "planner/base.html" %}
-{% block title %}Delete task – MyPlanner{% endblock %}
+
+<!-- Titulek stránky -->
+{% block title %}Delete list – MyPlanner{% endblock %}
+
+<!-- Zvýrazní záložku To‑Do‑Lists v horním menu -->
+{% block nav_lists %}is-active{% endblock %}
 
 {% block content %}
-  <h1>Delete task</h1>
-  <p>Are you sure you want to delete the task <strong>{{ task.title }}</strong>?</p>
+  <!-- Nadpis stránky -->
+  <h1>Delete list</h1>
 
+  <!-- Potvrzení akce (zobrazuje název listu) -->
+  <p>Are you sure you want to delete the list “{{ list.name }}”?</p>
+
+  <!-- Formulář pro potvrzení mazání -->
   <form method="post">
     {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, delete</button>
-    <a href="{% url 'html-task_detail' task.pk %}" class="btn">Cancel</a>
+
+    <div class="action-group" style="display:flex;gap:10px;justify-content:center;margin-top:14px;">
+      <!-- Potvrdit smazání -->
+      <button type="submit" class="btn btn-danger">Yes, delete</button>
+
+      <!-- Zpět na přehled listů (pevný odkaz, žádná historie) -->
+      <a class="btn btn-outline" href="{% url 'html-list_index' %}">Back</a>
+    </div>
   </form>
 {% endblock %}

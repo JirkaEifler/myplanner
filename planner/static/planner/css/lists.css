@@ -1,0 +1,85 @@
+/* ===== Canvas ===== */
+.table-wrap{
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+/* ===== Table ===== */
+table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+th, td{
+  border: 1px solid #e5e7eb;
+  padding: 8px 10px;
+  vertical-align: middle;
+}
+th{ background:#fafafa; }
+
+/* vycentrované hlavičky */
+th.col-name,
+th.col-count,
+th.col-actions{
+  text-align: center;
+}
+
+/* rozvržení sloupců – rozumné poměry, aby „Actions“ nepřetékal */
+.col-name    { width: 36%; }
+.col-count   { width: 16%; text-align: center; }
+.col-actions { width: 100%; text-align: center; }
+
+/* chip u názvu listu (barví se přes --hue) */
+.name-cell .title-wrap{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+}
+.name-cell .chip{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:12px;
+  border:1px solid hsl(var(--hue, 120) 45% 50%);
+  background:hsl(var(--hue, 120) 60% 92%);
+  color:#111;
+  text-decoration:none;
+  transition: background .15s ease, border-color .15s ease, filter .15s ease;
+}
+.name-cell .chip:hover{
+  background:hsl(var(--hue, 120) 60% 85%);
+  border-color:hsl(var(--hue, 120) 45% 40%);
+  text-decoration:underline;
+}
+
+/* Actions – tlačítka v jedné řadě, bez zalamování textu */
+.col-actions{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+.action-group{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+
+.btn-sm{
+  display:inline-block;
+  padding:6px 12px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  background:#f6f6f6;
+  text-decoration:none;
+  font-weight:600;
+  transition: filter .15s ease, border-color .15s ease;
+  white-space: nowrap; /* drž text na jednom řádku */
+}
+.btn-sm:hover{
+  filter: brightness(0.96);
+  border-color:#c7cdd6;
+}
+
+/* varianty */
+.btn-sm--primary{ border-color:#b9c0ff; background:#eef0ff; }
+.btn-sm--warn{    border-color:#ffb1b1; background:#ffecec; }

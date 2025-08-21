@@ -2,6 +2,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
+from django.http import JsonResponse, HttpResponseBadRequest
+import json
+from django.views.decorators.http import require_POST
 
 from .forms import TaskForm, TypeToDoListForm
 from .models import Task, TypeToDoList
@@ -23,17 +26,9 @@ def html_task_list(request):
         Task.objects
         .filter(owner=request.user)
         .select_related("list")
-        .order_by("-id")
+        .order_by("list__name", "title")
     )
     return render(request, "planner/task_list.html", {"tasks": tasks})
-
-
-# Task Detail
-@login_required
-def html_task_detail(request, pk):
-    """Show details of a single task owned by the current user."""
-    task = get_object_or_404(Task, pk=pk, owner=request.user)
-    return render(request, "planner/task_detail.html", {"task": task})
 
 
 # Task Create
@@ -71,6 +66,36 @@ def html_task_create(request):
     return render(request, "planner/task_form.html", {"form": form, "is_edit": False})
 
 
+
+# Task Detail
+@login_required
+def html_task_detail(request, pk):
+    """Show details of a single task owned by the current user."""
+    task = get_object_or_404(Task, pk=pk, owner=request.user)
+
+    # vezmeme existující back_url ze session (pokud už je nastavené)
+    back_url = request.session.get("back_url")
+
+    # referer použijeme jen pokud ukazuje na seznamovou stránku
+    ref = request.META.get("HTTP_REFERER", "") or ""
+    ref_stripped = ref.rstrip("/")
+
+    # All My Tasks (přesná stránka seznamu)
+    if ref_stripped.endswith("/app/tasks"):
+        back_url = ref
+        request.session["back_url"] = back_url
+    # Detail listu (povolíme jakýkoliv /app/lists/<id>/)
+    elif "/app/lists/" in ref and "/edit" not in ref and "/delete" not in ref:
+        back_url = ref
+        request.session["back_url"] = back_url
+    # jinak back_url NEPŘEPISUJEME (abychom zůstali u poslední dobré hodnoty)
+
+    return render(request, "planner/task_detail.html", {
+        "task": task,
+        "back_url": back_url,
+    })
+
+
 # Task Edit
 @login_required
 def html_task_edit(request, pk):
@@ -86,16 +111,19 @@ def html_task_edit(request, pk):
             else:
                 form.save()
                 messages.success(request, "Task updated.")
+                # po uložení jdeme na detail; ten si NEPŘEPÍŠE back_url, protože ref je /edit
                 return redirect("html-task_detail", pk=task.pk)
     else:
         form = TaskForm(request.user, instance=task)
 
+    # Back v edit formuláři: použijeme back_url ze session pokud existuje
+    back_url = request.session.get("back_url") or None
+
     return render(
         request,
         "planner/task_form.html",
-        {"form": form, "is_edit": True, "task": task},
+        {"form": form, "is_edit": True, "task": task, "back_url": back_url},
     )
-
 
 # Task Delete
 @login_required
@@ -190,3 +218,41 @@ def html_list_delete(request, pk):
         return redirect("html-list_index")
 
     return render(request, "planner/typelist_confirm_delete.html", {"obj": obj})
+
+
+
+@login_required
+@require_POST
+def toggle_task_done(request, pk):
+    """
+    Přepne/nebo nastaví Task.is_completed a uloží do DB.
+    - Pokud request obsahuje 'done' (POST/JSON), nastavíme na danou hodnotu
+    - Jinak stav přepneme (toggle)
+    Vrací JSON {ok: True, done: bool}.
+    """
+    task = get_object_or_404(Task, pk=pk, owner=request.user)
+
+    done = None
+
+    # 1) zkuste POST form-data
+    if "done" in request.POST:
+        done_val = request.POST.get("done")
+        done = str(done_val).lower() in ("1", "true", "on", "yes")
+
+    # 2) zkuste JSON body
+    if done is None:
+        try:
+            data = json.loads(request.body.decode() or "{}")
+        except Exception:
+            data = {}
+        if "done" in data:
+            done = str(data["done"]).lower() in ("1", "true", "on", "yes")
+
+    # 3) když nic nepřišlo -> toggle
+    if done is None:
+        task.is_completed = not task.is_completed
+    else:
+        task.is_completed = done
+
+    task.save(update_fields=["is_completed"])
+    return JsonResponse({"ok": True, "done": task.is_completed})

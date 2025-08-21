@@ -1,14 +1,20 @@
 {% extends "planner/base.html" %}
+{% block nav_tasks %}is-active{% endblock %}
 {% block title %}Delete list – MyPlanner{% endblock %}
 
 {% block content %}
-  <!-- Confirmation dialog for deleting a list -->
   <h1>Delete list</h1>
-  <p>Are you sure you want to delete the list <strong>{{ obj.name }}</strong>?</p>
 
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, delete</button>
-    <a href="{% url 'html-list_index' %}" class="btn">Cancel</a>
-  </form>
+  <div class="table-wrap" style="max-width:600px;margin:0 auto;">
+    <p>Are you sure you want to delete the list “{{ obj.name }}”?</p>
+
+    <!-- akční tlačítka -->
+    <form method="post">
+      {% csrf_token %}
+      <div class="action-group" style="display:flex;gap:10px;justify-content:center;margin-top:14px;">
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a class="btn btn-outline" href="{% url 'html-list_index' %}">Back</a>
+      </div>
+    </form>
+  </div>
 {% endblock %}

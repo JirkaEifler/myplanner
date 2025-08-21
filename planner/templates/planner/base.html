@@ -1,59 +1,68 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <title>{% block title %}MyPlanner{% endblock %}</title>
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
-    header { display:flex; gap:16px; align-items:center; margin-bottom:20px; }
-    nav a { margin-right:12px; text-decoration:none; }
-    .btn { padding:6px 10px; border:1px solid #ccc; border-radius:6px; background:#f6f6f6; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #ddd; padding: 8px; }
-    th { background:#fafafa; text-align:left; }
-    .btn-danger { border-color:#e0b4b4; background:#fbeaea; }
-  </style>
+
+  <!-- hlavní globální styly (base.css) -->
+  <link rel="stylesheet" href="{% static 'planner/css/base.css' %}">
+
+  <!-- podle potřeby lze vložit další CSS soubory (lists.css, tasks.css, …) -->
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
-  <!-- Base layout with top navigation -->
-  <header>
-    <strong>MyPlanner</strong>
-    <nav>
-      <a href="/app/lists/">Lists</a>
-      <a href="{% url 'home' %}">Home</a>
-      <a href="/app/tasks/">Tasks</a>
-      <a href="{% url 'html-task_create' %}" class="btn">Create task</a>
-      <a href="/admin/">Admin</a>
-      {% if user.is_authenticated %}
-        <a href="/api-auth/logout/">Logout</a>
-      {% else %}
-        <a href="/api-auth/login/">Login</a>
-      {% endif %}
-    </nav>
-  </header>
+  <div class="container">
+    <!-- horní navigační menu -->
+    <header>
+      <div class="brand">MyPlanner</div>
+      <nav>
+        <!-- každá položka menu má svůj blok – umožňuje zvýraznění aktivní záložky -->
+        <a class="nav-btn {% block nav_home %}{% endblock %}"  href="{% url 'home' %}">Home</a>
+        <a class="nav-btn {% block nav_lists %}{% endblock %}" href="{% url 'html-list_index' %}">To-Do-Lists</a>
+        <a class="nav-btn {% block nav_tasks %}{% endblock %}" href="{% url 'html-task_list' %}">All My Tasks</a>
 
-  <!-- Flash messages -->
-  {% if messages %}
-    <div style="margin: 12px 0;">
-      {% for message in messages %}
-        <div
-          style="
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #ddd;
-            {% if message.tags == 'success' %}background:#effaf0;{% endif %}
-            {% if message.tags == 'error' %}background:#fdecea;{% endif %}
-            {% if message.tags == 'warning' %}background:#fff4e5;{% endif %}
-            {% if message.tags == 'info' %}background:#eef5ff;{% endif %}
-          "
-        >
-          {{ message }}
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
+        <!-- Admin vidí odkaz do administrace -->
+        {% if user.is_superuser %}
+          <a class="nav-btn {% block nav_admin %}{% endblock %}" href="/admin/">Admin</a>
+        {% endif %}
 
-  {% block content %}{% endblock %}
+        <!-- přihlášený uživatel má Logout, nepřihlášený Login -->
+        {% if user.is_authenticated %}
+          <a class="nav-btn" href="/api-auth/logout/">Logout</a>
+        {% else %}
+          <a class="nav-btn" href="/api-auth/login/">Login</a>
+        {% endif %}
+      </nav>
+    </header>
+
+    <!-- flash messages – zobrazí se po úspěšné nebo chybové akci -->
+    {% if messages %}
+      <div style="margin: 12px 0;">
+        {% for message in messages %}
+          <div
+            style="
+              padding: 10px 12px;
+              border-radius: 8px;
+              margin-bottom: 8px;
+              border: 1px solid #ddd;
+              {% if message.tags == 'success' %}background:#effaf0;{% endif %}
+              {% if message.tags == 'error' %}background:#fdecea;{% endif %}
+              {% if message.tags == 'warning' %}background:#fff4e5;{% endif %}
+              {% if message.tags == 'info' %}background:#eef5ff;{% endif %}
+            "
+          >
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- sem se načítá vlastní obsah jednotlivých stránek -->
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- prostor pro doplnění JavaScriptu na konkrétní stránce -->
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

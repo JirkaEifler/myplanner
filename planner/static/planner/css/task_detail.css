@@ -1,0 +1,89 @@
+/* ===== Wrapper ===== */
+.detail-wrap {
+  max-width: 760px;     /* stejné jako dřív, drží obsah příjemně úzký */
+  margin: 0 auto;
+}
+
+/* ===== Card ===== */
+.detail-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #fff;
+  padding: 20px 22px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.08);
+}
+
+/* ===== Key–value grid ===== */
+.detail-card .row {
+  display: grid;
+  grid-template-columns: 180px 1fr;  /* klíč vlevo, hodnota vpravo */
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid #f1f5f9;
+}
+.detail-card .row:first-child { border-top: 0; }
+
+.k {
+  text-align: right;
+  font-weight: 800;
+  color: #111827;
+}
+.v { color: #111827; }
+
+/* ===== Actions (tlačítka pod kartou) ===== */
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* Volitelné jemné sjednocení s .btn z base.css (nepřebíjí vzhled) */
+.actions .btn {
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+/* ===== Badges (specifické pro detail) ===== */
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--pill-bd, #e5e7eb);
+  background: var(--pill-bg, #f6f6f6);
+  text-decoration: none;
+  font-weight: 600;
+}
+.badge:hover { text-decoration: underline; }
+
+.badge--list {
+  border-color: #4caf50;
+  background: #d4edda;
+  color: #111;
+}
+.badge--date {
+  border-color: var(--active-bd, #c4b5fd);
+  background: var(--active-bg, #ede9fe);
+  color: var(--accent-600, #5b21b6);
+}
+.badge--ok {
+  border-color: #22c55e;
+  background: #dcfce7;
+  color: #065f46;
+}
+.badge--warn {
+  border-color: #e5e7eb;
+  background: #f9fafb;
+  color: #6b7280;
+}
+
+/* ===== Responsivita ===== */
+@media (max-width: 560px) {
+  .detail-card { padding: 16px 16px; }
+  .detail-card .row {
+    grid-template-columns: 1fr;   /* klíč nad hodnotu */
+    gap: 6px;
+  }
+  .k { text-align: left; }
+}
