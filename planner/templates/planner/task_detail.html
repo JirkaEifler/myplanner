@@ -21,6 +21,29 @@
           <th>Description</th>
           <td>{{ task.description|linebreaksbr|default:"—" }}</td>
         </tr>
+
+        <tr>
+          <th>Priority</th>
+          <td>
+            <span class="flag prio-{{ task.priority }}">
+              {{ task.get_priority_display }}
+            </span>
+          </td>
+        </tr>
+
+        <tr>
+          <th>Tags</th>
+          <td>
+            {% if task.tags.exists %}
+              {% for tag in task.tags.all %}
+                <span class="chip" style="--hue: 200">{{ tag.name }}</span>
+              {% endfor %}
+            {% else %}
+              —
+            {% endif %}
+          </td>
+        </tr>
+
         <tr>
           <th>List</th>
           <td>
@@ -42,16 +65,15 @@
       </tbody>
     </table>
 
-    <!-- Akce pod tabulkou -->
-        <div class="action-group" style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
-            <a class="btn" href="{% url 'html-task_edit' task.pk %}">Edit</a>
-            <a class="btn btn-danger" href="{% url 'html-task_delete' task.pk %}">Delete</a>
+    <div class="action-group" style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
+      <a class="btn" href="{% url 'html-task_edit' task.pk %}">Edit</a>
+      <a class="btn btn-danger" href="{% url 'html-task_delete' task.pk %}">Delete</a>
 
-            {% if back_url %}
-                <a class="btn" href="{{ back_url }}">Back</a>
-            {% else %}
-                <a class="btn" href="{% url 'html-task_list' %}">Back</a>
-            {% endif %}
-        </div>
+      {% if back_url %}
+        <a class="btn" href="{{ back_url }}">Back</a>
+      {% else %}
+        <a class="btn" href="{% url 'html-task_list' %}">Back</a>
+      {% endif %}
+    </div>
   </div>
 {% endblock %}

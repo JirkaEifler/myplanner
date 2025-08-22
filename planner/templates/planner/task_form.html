@@ -31,7 +31,7 @@
         {% if form.description.errors %}<div class="err">{{ form.description.errors }}</div>{% endif %}
       </div>
 
-      <!-- Due date + Clear (jeden řádek přes celou šířku) -->
+      <!-- Due date + Clear -->
       <div class="form-row span-2">
         <label for="{{ form.due_date.id_for_label }}">Due date</label>
         <div class="date-input-wrapper">
@@ -41,7 +41,28 @@
         {% if form.due_date.errors %}<div class="err">{{ form.due_date.errors }}</div>{% endif %}
       </div>
 
-      <!-- Is completed (samostatný řádek pod datem) -->
+      <!-- Priority -->
+      <div class="form-row span-2">
+        <label for="{{ form.priority.id_for_label }}">Priority</label>
+        {{ form.priority }}
+        {% if form.priority.errors %}<div class="err">{{ form.priority.errors }}</div>{% endif %}
+      </div>
+
+      <!-- Tags (checkboxy) -->
+      <div class="form-row span-2">
+        <label for="{{ form.tags.id_for_label }}">Tags</label>
+        {{ form.tags }}
+        {% if form.tags.errors %}<div class="err">{{ form.tags.errors }}</div>{% endif %}
+      </div>
+
+      <!-- New tags (čárkami oddělené názvy) -->
+      <div class="form-row span-2">
+        <label for="{{ form.new_tags.id_for_label }}">New tags</label>
+        {{ form.new_tags }}
+        {% if form.new_tags.errors %}<div class="err">{{ form.new_tags.errors }}</div>{% endif %}
+      </div>
+
+      <!-- Is completed -->
       <div class="form-row span-2 checkbox-inline">
         {{ form.is_completed }}
         <label for="{{ form.is_completed.id_for_label }}">Is completed</label>
@@ -56,13 +77,12 @@
       </div>
     </div>
 
-    <!-- Akce -->
+    <!-- Actions -->
     <div class="form-actions">
       <button type="submit" class="btn btn--primary">
         {% if form.instance.pk %}Save{% else %}Create{% endif %}
       </button>
 
-      {# Back – preferuj back_url ze session (předán z view), jinak fallbacky #}
       {% if back_url %}
         <a class="btn btn-outline" href="{{ back_url }}">Back</a>
       {% elif form.instance.pk %}

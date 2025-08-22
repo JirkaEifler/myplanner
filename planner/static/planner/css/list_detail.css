@@ -21,9 +21,10 @@ th {
 }
 
 /* Sloupce */
-.col-title   { width: 60%; text-align: center; }
-.col-date    { width: 20%; text-align: center; }
-.col-done    { width: 20%; text-align: center; }
+.col-title { width: 52%; text-align: center; }
+.col-prio  { width: 8%;  text-align: center; }
+.col-date  { width: 20%; text-align: center; }
+.col-done  { width: 20%; text-align: center; }
 
 /* ===== Chips ===== */
 .title-wrap {
@@ -50,6 +51,19 @@ th {
   text-decoration: underline;
 }
 
+/* ===== Priority flags (stejné jako v tasks.css) ===== */
+.flag::before{
+  content:"⚑";
+  font-size: 16px;
+  line-height: 1;
+  display:inline-block;
+}
+
+.prio-1::before{ color:#ef4444; } /* červená */
+.prio-2::before{ color:#f59e0b; } /* žlutá   */
+.prio-3::before{ color:#3b82f6; } /* modrá   */
+.prio-4::before{ color:#9ca3af; } /* šedá    */
+
 /* ===== Empty state ===== */
 .empty {
   text-align: center;
@@ -62,7 +76,6 @@ h1 .chip {
   font-size: 1.6rem;     /* zvětší písmo jen v nadpisu */
   padding: 0.6em 1.4em;  /* dá tomu víc prostoru */
 }
-
 
 /* Done cell */
 .done-cell{

@@ -5,39 +5,37 @@
 {% load planner_extras %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'planner/css/list_detail.css' %}?v=5">
+<link rel="stylesheet" href="{% static 'planner/css/list_detail.css' %}?v=7">
 {% endblock %}
 
 {% block content %}
-  <!-- Nadpis se štítkem listu -->
   <h1>
     <span class="chip" style="--hue: {{ list.name|list_hue }};">{{ list.name }}</span>
   </h1>
 
-  <!-- Horní akční lišta: Create + Back -->
   <div class="table-wrap">
-        <div class="action-group" style="display:flex;gap:10px;justify-content:center;margin:10px 0 14px;">
-          <a class="btn btn--primary" href="{% url 'html-task_create' %}?list={{ list.pk }}">+ Create task</a>
+    <div class="action-group" style="display:flex;gap:10px;justify-content:center;margin:10px 0 14px;">
+      <a class="btn btn--primary" href="{% url 'html-task_create' %}?list={{ list.pk }}">+ Create task</a>
 
-          {# Pokud přišel uživatel z All My Tasks, vrať ho tam, jinak na index listů #}
-          {% if request.GET.from == 'tasks' %}
-            <a class="btn btn-outline" href="{% url 'html-task_list' %}">Back</a>
-          {% else %}
-            <a class="btn btn-outline" href="{% url 'html-list_index' %}">Back</a>
-          {% endif %}
-        </div>
+      {% if request.GET.from == 'tasks' %}
+        <a class="btn btn-outline" href="{% url 'html-task_list' %}">Back</a>
+      {% else %}
+        <a class="btn btn-outline" href="{% url 'html-list_index' %}">Back</a>
+      {% endif %}
+    </div>
   </div>
 
-  <!-- Tabulka úkolů v daném listu -->
   <table class="compact">
     <colgroup>
       <col class="col-title">
+      <col class="col-prio" style="width:10%;">
       <col class="col-date">
       <col class="col-done">
     </colgroup>
     <thead>
       <tr>
         <th class="col-title">Open task detail</th>
+        <th class="col-prio">Priority</th>
         <th class="col-date">Due date</th>
         <th class="col-done">Done</th>
       </tr>
@@ -54,9 +52,14 @@
               </a>
             </div>
           </td>
+
+          <!-- Priorita -->
+            <td class="col-prio">
+              <span class="flag prio-{{ t.priority }}" title="{{ t.get_priority_display }}"></span>
+            </td>
+
           <td class="center">{{ t.due_date|date:"M. d, Y"|default:"—" }}</td>
 
-          <!-- Done (AJAX toggle) -->
           <td class="col-done done-cell">
             <input
               type="checkbox"
@@ -68,27 +71,12 @@
         </tr>
       {% empty %}
         <tr>
-          <td colspan="3" class="empty">No tasks found.</td>
+          <td colspan="4" class="empty">No tasks found.</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 
-  <!-- JS: přesměrování Back podle query parametru ?from=tasks -->
-  <script>
-    (function () {
-      var back = document.getElementById('backLink');
-      if (!back) return;
-      var params = new URLSearchParams(window.location.search);
-      if (params.get('from') === 'tasks') {
-        back.setAttribute('href', "{% url 'html-task_list' %}");
-      } else {
-        back.setAttribute('href', "{% url 'html-list_index' %}");
-      }
-    })();
-  </script>
-
-  <!-- AJAX toggle „Done“ (stejné chování jako na All My Tasks) -->
   <script>
     function getCookie(name) {
       const value = `; ${document.cookie}`;
@@ -102,8 +90,7 @@
         const el = e.currentTarget;
         const taskId = el.getAttribute('data-id');
         const url = "{% url 'html-task_toggle_done' 0 %}".replace('/0/', `/${taskId}/`);
-
-        const previous = !el.checked; // pro případný revert
+        const previous = !el.checked;
 
         try {
           const res = await fetch(url, {
@@ -120,11 +107,11 @@
 
           const data = await res.json();
           if (!data.ok) {
-            el.checked = previous; // revert
+            el.checked = previous;
             alert('Could not update task. Try again.');
           }
         } catch (err) {
-          el.checked = previous; // revert
+          el.checked = previous;
           alert('Connection problem. Try again.');
         }
       });

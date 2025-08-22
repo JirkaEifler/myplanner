@@ -25,6 +25,7 @@ th{ background:#fafafa; }
 /* vycentrované hlavičky */
 th.col-title,
 th.col-list,
+th.col-prio,    /* ⟵ přidáno */
 th.col-date,
 th.col-done,
 th.col-actions{
@@ -33,6 +34,7 @@ th.col-actions{
 
 /* zarovnání buněk (šířky řeší <colgroup> v šabloně) */
 .col-list   { text-align:center; }
+.col-prio   { text-align:center; }  /* ⟵ nový sloupec "Prio" */
 .col-date   { text-align:center; white-space: nowrap; }
 .col-done   { text-align:center; }
 .col-actions{ text-align:center; white-space: nowrap; }
@@ -64,6 +66,21 @@ th.col-actions{
   border-color:hsl(var(--hue, 120) 45% 40%);
   text-decoration:underline;
 }
+
+/* ===== Priority flags ===== */
+/* samotná vlaječka (ikona před textem) */
+.flag::before{
+  content:"⚑";
+  font-size: 16px;
+  line-height: 1;
+  display:inline-block;
+}
+
+/* barvy pro priority */
+.prio-1::before{ color:#ef4444; } /* červená   */
+.prio-2::before{ color:#f59e0b; } /* žlutá     */
+.prio-3::before{ color:#3b82f6; } /* modrá     */
+.prio-4::before{ color:#9ca3af; } /* šedá      */
 
 /* Done cell */
 .done-cell{ text-align:center; }
