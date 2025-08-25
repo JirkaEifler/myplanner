@@ -1,0 +1,31 @@
+{# Template: event_form.html
+   Purpose: Edit form for an existing event.
+   Inherits base.html and provides start/end inputs with save/back actions. #}
+
+{% extends "planner/base.html" %}
+{% block title %}Edit event – MyPlanner{% endblock %}
+
+{% block content %}
+  <h1>Edit event</h1>
+
+  <div class="form-card" style="max-width:700px;margin:0 auto;">
+    {# Event edit form #}
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-row two-cols">
+        <div>
+          <label for="{{ form.start_time.id_for_label }}">Start</label>
+          {{ form.start_time }}
+        </div>
+        <div>
+          <label for="{{ form.end_time.id_for_label }}">End</label>
+          {{ form.end_time }}
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn--primary" type="submit">Save</button>
+        <a class="btn btn-outline" href="{% url 'html-task_detail' event.task_id %}">Back</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

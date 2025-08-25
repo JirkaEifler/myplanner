@@ -1,111 +1,188 @@
-{% extends "planner/base.html" %}
-{% block nav_tasks %}is-active{% endblock %}
-{% load static %}
+{# Template: task_form.html
+   Purpose: Create/edit form for a task.
+   Includes title, description, due date, priority, tags (chips + new),
+   completion flag, and list selector. #}
 
-{% block title %}
-  {% if form.instance.pk %}Edit task – MyPlanner{% else %}Create task – MyPlanner{% endif %}
-{% endblock %}
+{% extends "planner/base.html" %}
+{% load static %}
+{% block title %}{% if is_edit %}Edit task{% else %}Create task{% endif %} – MyPlanner{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'planner/css/forms.css' %}?v=3">
+<link rel="stylesheet" href="{% static 'planner/css/forms.css' %}?v=4">
+<link rel="stylesheet" href="{% static 'planner/css/tasks.css' %}?v=9">
+<style>
+  /* Tag chips styles */
+  .chips-wrap{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+  .tag-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #e5e7eb;border-radius:999px;background:#f6f6fb}
+  .tag-chip .x{cursor:pointer;opacity:.7}
+  .tags-card{padding:10px;border:1px solid #e5e7eb;border-radius:12px;background:#fafafa}
+  .tags-actions{display:flex;justify-content:center;gap:8px;margin:8px 0}
+  .muted{color:#6b7280;font-size:.95rem}
+</style>
 {% endblock %}
 
 {% block content %}
-  <h1>{% if form.instance.pk %}Edit task{% else %}Create task{% endif %}</h1>
+<h1>{% if is_edit %}Edit task{% else %}Create task{% endif %}</h1>
 
-  <form method="post" novalidate class="form-card">
-    {% csrf_token %}
+<form method="post" class="form-card">
+  {% csrf_token %}
 
-    <div class="form-grid">
-      <!-- Title -->
-      <div class="form-row span-2">
-        <label for="{{ form.title.id_for_label }}">Title</label>
-        {{ form.title }}
-        {% if form.title.errors %}<div class="err">{{ form.title.errors }}</div>{% endif %}
+  <!-- Global (non-field) errors -->
+  {% if form.non_field_errors %}
+    <div class="err">{{ form.non_field_errors|striptags }}</div>
+  {% endif %}
+
+  <!-- Title -->
+  <div class="form-row">
+    <label for="{{ form.title.id_for_label }}">Title</label>
+    {{ form.title }}
+  </div>
+
+  <!-- Description -->
+  <div class="form-row">
+    <label for="{{ form.description.id_for_label }}">Description</label>
+    {{ form.description }}
+  </div>
+
+  <!-- Due date & Priority -->
+  <div class="form-row two">
+    <div>
+      <label for="{{ form.due_date.id_for_label }}">Due date</label>
+      <div class="hstack">
+        {{ form.due_date }}
+        <button type="button" id="btn-clear-date" class="btn btn-ghost small-btn">Clear</button>
+      </div>
+    </div>
+    <div>
+      <label for="{{ form.priority.id_for_label }}">Priority</label>
+      {{ form.priority }}
+    </div>
+  </div>
+
+  <!-- Tags -->
+  <div class="form-row">
+    <label for="id_tags">Tags</label>
+
+    <!-- Chips reflecting selected tags -->
+    <div id="picked-chips" class="chips-wrap"></div>
+
+    <div class="tags-card">
+      <div class="muted" style="margin:0 0 6px 2px;">Available tags</div>
+      {{ form.tags }}
+
+      <div class="tags-actions">
+        <button type="button" class="btn btn-outline small-btn" id="btn-add-selected">Add selected</button>
       </div>
 
-      <!-- Description -->
-      <div class="form-row span-2">
-        <label for="{{ form.description.id_for_label }}">Description</label>
-        {{ form.description }}
-        {% if form.description.errors %}<div class="err">{{ form.description.errors }}</div>{% endif %}
-      </div>
-
-      <!-- Due date + Clear -->
-      <div class="form-row span-2">
-        <label for="{{ form.due_date.id_for_label }}">Due date</label>
-        <div class="date-input-wrapper">
-          {{ form.due_date }}
-          <button type="button" id="clear-date" class="btn btn-ghost small-btn">Clear</button>
-        </div>
-        {% if form.due_date.errors %}<div class="err">{{ form.due_date.errors }}</div>{% endif %}
-      </div>
-
-      <!-- Priority -->
-      <div class="form-row span-2">
-        <label for="{{ form.priority.id_for_label }}">Priority</label>
-        {{ form.priority }}
-        {% if form.priority.errors %}<div class="err">{{ form.priority.errors }}</div>{% endif %}
-      </div>
-
-      <!-- Tags (checkboxy) -->
-      <div class="form-row span-2">
-        <label for="{{ form.tags.id_for_label }}">Tags</label>
-        {{ form.tags }}
-        {% if form.tags.errors %}<div class="err">{{ form.tags.errors }}</div>{% endif %}
-      </div>
-
-      <!-- New tags (čárkami oddělené názvy) -->
-      <div class="form-row span-2">
-        <label for="{{ form.new_tags.id_for_label }}">New tags</label>
+      <div class="hstack">
         {{ form.new_tags }}
-        {% if form.new_tags.errors %}<div class="err">{{ form.new_tags.errors }}</div>{% endif %}
+        <button type="button" id="btn-add-new" class="btn btn-ghost small-btn">Add</button>
       </div>
 
-      <!-- Is completed -->
-      <div class="form-row span-2 checkbox-inline">
-        {{ form.is_completed }}
-        <label for="{{ form.is_completed.id_for_label }}">Is completed</label>
-        {% if form.is_completed.errors %}<div class="err">{{ form.is_completed.errors }}</div>{% endif %}
-      </div>
-
-      <!-- List -->
-      <div class="form-row span-2">
-        <label for="{{ form.list.id_for_label }}">List</label>
-        {{ form.list }}
-        {% if form.list.errors %}<div class="err">{{ form.list.errors }}</div>{% endif %}
-      </div>
+      <div class="muted" style="margin-top:6px;">Hold Ctrl/Cmd to select multiple.</div>
     </div>
+  </div>
 
-    <!-- Actions -->
-    <div class="form-actions">
-      <button type="submit" class="btn btn--primary">
-        {% if form.instance.pk %}Save{% else %}Create{% endif %}
-      </button>
+  <!-- Is completed -->
+  <div class="form-row" style="text-align:center; margin-top:6px; margin-bottom:10px;">
+    <label for="{{ form.is_completed.id_for_label }}" style="margin-right:8px;">Is completed</label>
+    {{ form.is_completed }}
+  </div>
 
-      {% if back_url %}
-        <a class="btn btn-outline" href="{{ back_url }}">Back</a>
-      {% elif form.instance.pk %}
-        <a class="btn btn-outline" href="{% url 'html-task_detail' form.instance.pk %}">Back</a>
-      {% elif request.GET.list %}
-        <a class="btn btn-outline" href="{% url 'html-list_detail' request.GET.list %}">Back</a>
-      {% else %}
-        <a class="btn btn-outline" href="{% url 'html-list_index' %}">Back</a>
-      {% endif %}
-    </div>
-  </form>
+  <!-- List -->
+  <div class="form-row">
+    <label for="{{ form.list.id_for_label }}">List</label>
+    {{ form.list }}
+    {% if form.list.errors %}
+      <div class="err">{{ form.list.errors|striptags }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Actions -->
+  <div class="form-actions" style="justify-content:center;gap:16px;">
+    <button class="btn btn--primary" type="submit">Save</button>
+    {% if back_url %}
+      <a class="btn btn-outline" href="{{ back_url }}">Back</a>
+    {% else %}
+      <a class="btn btn-outline" href="{% url 'html-task_list' %}">Back</a>
+    {% endif %}
+  </div>
+</form>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-  (function () {
-    var clearBtn = document.getElementById('clear-date');
-    var dateInput = document.getElementById('{{ form.due_date.id_for_label }}');
-    if (clearBtn && dateInput) {
-      clearBtn.addEventListener('click', function () {
-        dateInput.value = '';
+(function(){
+  // Clear due date
+  const dateInp = document.getElementById('{{ form.due_date.id_for_label }}');
+  const clrDate = document.getElementById('btn-clear-date');
+  if (clrDate && dateInp) clrDate.addEventListener('click', ()=>{ dateInp.value=''; });
+
+  // Tags chips UX
+  const select  = document.getElementById('id_tags');
+  const chips   = document.getElementById('picked-chips');
+  const addSel  = document.getElementById('btn-add-selected');
+  const addBtn  = document.getElementById('btn-add-new');
+  const addIn   = document.getElementById('id_new_tag_input');
+
+  function hasChipForOption(opt){ return !!chips.querySelector('[data-id="'+opt.value+'"]'); }
+
+  function addChip(opt){
+    if (!opt || hasChipForOption(opt)) return;
+    const c = document.createElement('span');
+    c.className = 'tag-chip';
+    c.setAttribute('data-id', opt.value);
+    c.textContent = '# ' + opt.text + ' ';
+    const x = document.createElement('span');
+    x.className = 'x';
+    x.textContent = '×';
+    x.title = 'remove';
+    x.addEventListener('click', ()=>{
+      opt.selected = false;
+      c.remove();
+    });
+    c.appendChild(x);
+    chips.appendChild(c);
+  }
+
+  // Initial chips for preselected options
+  if (select){
+    Array.from(select.options).forEach(opt=>{
+      if (opt.selected) addChip(opt);
+    });
+  }
+
+  // Add from multi-select
+  if (addSel && select){
+    addSel.addEventListener('click', ()=>{
+      Array.from(select.selectedOptions).forEach(opt=>{
+        opt.selected = true;
+        addChip(opt);
       });
-    }
-  })();
+    });
+  }
+
+  // Add new (or existing by name) tag
+  if (addBtn && addIn && select){
+    addBtn.addEventListener('click', ()=>{
+      const raw = (addIn.value || '').trim();
+      if (!raw) return;
+
+      let opt = Array.from(select.options).find(
+        o => o.text.trim().toLowerCase() === raw.toLowerCase()
+      );
+      if (opt){
+        opt.selected = true;
+        addChip(opt);
+      } else {
+        opt = new Option(raw, 'NEW__' + raw, true, true);
+        select.add(opt);
+        addChip(opt);
+      }
+      addIn.value = '';
+      addIn.focus();
+    });
+  }
+})();
 </script>
 {% endblock %}

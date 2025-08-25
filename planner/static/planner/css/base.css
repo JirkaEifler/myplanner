@@ -1,13 +1,13 @@
 /* ===== Base layout ===== */
 
 :root {
-  --accent: #6b21a8;        /* fialová – akcent */
+  --accent: #6b21a8;
   --accent-600: #5b21b6;
-  --pill-bg: #f6f6f6;       /* výchozí pozadí pill tlačítek */
-  --pill-bd: #e5e7eb;       /* okraj */
-  --pill-tx: #6b21a8;       /* text v tlačítku */
-  --active-bg: #ede9fe;     /* pozadí aktivního tlačítka */
-  --active-bd: #c4b5fd;     /* okraj aktivního tlačítka */
+  --pill-bg: #f6f6f6;
+  --pill-bd: #e5e7eb;
+  --pill-tx: #6b21a8;
+  --active-bg: #ede9fe;
+  --active-bd: #c4b5fd;
 }
 
 * { box-sizing: border-box; }
@@ -47,11 +47,11 @@ nav {
   justify-content: center;
 }
 
-/* globální odkazy – bez podtržení, jen na hover */
+/* global links */
 a { text-decoration: none; color: inherit; }
 a:hover { text-decoration: underline; }
 
-/* „pill“ tlačítka menu */
+/* pill buttons in menu */
 .nav-btn {
   display: inline-flex;
   align-items: center;
@@ -85,7 +85,7 @@ a:hover { text-decoration: underline; }
   border-color: var(--accent);
 }
 
-/* aktivní položka v menu */
+/* active menu item */
 .nav-btn.is-active {
   background: var(--active-bg);
   border-color: var(--active-bd);
@@ -93,7 +93,7 @@ a:hover { text-decoration: underline; }
   box-shadow: 0 8px 22px rgba(99, 102, 241, .18);
 }
 
-/* ===== Common buttons (mimo menu) ===== */
+/* ===== Common buttons (outside menu) ===== */
 
 .btn {
   padding: 6px 12px;
@@ -106,11 +106,12 @@ a:hover { text-decoration: underline; }
 .btn:hover { background: #fafafa; }
 .btn-danger { border-color:#e0b4b4; background:#fbeaea; }
 
+
 /* ===== Tables & texts ===== */
 
 table { border-collapse: collapse; width: 100%; }
 th, td { border: 1px solid #ddd; padding: 8px; }
-th { background:#fafafa; text-align:left; }
+th { background:#fafafa; text-align:center; }
 
 .main-title {
   font-size: 24px;
@@ -123,8 +124,7 @@ th { background:#fafafa; text-align:left; }
   color: #444;
 }
 
-/* ===== Chips – globální štítky s barvou z CSS proměnné --hue ===== */
-/* Do šablon posíláš: style="--hue: {{ ...|list_hue }}" */
+/* ===== Chips (global labels with CSS --hue variable) ===== */
 
 .chip {
   display:inline-block;
@@ -146,3 +146,11 @@ th { background:#fafafa; text-align:left; }
 }
 
 .chip:active { transform: translateY(1px); }
+
+/* ===== Dark theme (optional) ===== */
+
+.theme-dark {
+  color-scheme: dark;
+  --page-bg: #0b0f14;
+  --text: #e9eef7;
+}

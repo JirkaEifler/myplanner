@@ -1,0 +1,161 @@
+{# Template: filters.html
+   Purpose: Task filtering page with form inputs (search, list, priority, done, tags)
+   and a results table. Extends base.html and highlights Filters in the navigation. #}
+
+{% extends "planner/base.html" %}
+{% load static planner_extras %}
+
+{% block nav_filters %}is-active{% endblock %}
+{% block title %}Filters – MyPlanner{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'planner/css/filters.css' %}?v=2">
+<link rel="stylesheet" href="{% static 'planner/css/tasks.css' %}?v=7">
+{% endblock %}
+
+{% block content %}
+  <h1>Filters</h1>
+
+  <!-- Filter form -->
+  <form method="get" class="filter-card" novalidate>
+    <div class="filters-grid">
+
+      <!-- Search -->
+      <div class="fcell span-2">
+        <label for="q" class="flabel">Search</label>
+        <input id="q" name="q" type="text"
+               value="{{ q|default_if_none:'' }}"
+               class="finput"
+               placeholder="Search in titles/descriptions…">
+      </div>
+
+      <!-- List -->
+      <div class="fcell">
+        <label for="list" class="flabel">List</label>
+        <select id="list" name="list" class="fselect">
+          <option value="">—</option>
+          {% for l in lists %}
+            <option value="{{ l.id }}"
+                    {% if l.id|stringformat:'s' == selected_list_id %}selected{% endif %}>
+              {{ l.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Priority -->
+      <div class="fcell">
+        <label for="priority" class="flabel">Priority</label>
+        <select id="priority" name="priority" class="fselect">
+          <option value="">—</option>
+          <option value="1" {% if selected_priority == '1' %}selected{% endif %}>Priority 1</option>
+          <option value="2" {% if selected_priority == '2' %}selected{% endif %}>Priority 2</option>
+          <option value="3" {% if selected_priority == '3' %}selected{% endif %}>Priority 3</option>
+          <option value="4" {% if selected_priority == '4' %}selected{% endif %}>Priority 4</option>
+        </select>
+      </div>
+
+      <!-- Done -->
+      <div class="fcell">
+        <label for="done" class="flabel">Done</label>
+        <select id="done" name="done" class="fselect">
+          <option value="">—</option>
+          <option value="1" {% if selected_done == '1' %}selected{% endif %}>Yes</option>
+          <option value="0" {% if selected_done == '0' %}selected{% endif %}>No</option>
+        </select>
+      </div>
+
+      <!-- Tags -->
+      <div class="fcell span-4">
+        <label for="tags" class="flabel">Tags</label>
+        <div class="hstack">
+          <select id="tags" name="tags" multiple size="6" class="fmultiselect" aria-label="Tags filter">
+            {% for tag in tags %}
+              <option value="{{ tag.id }}"
+                {% if tag.id|stringformat:'s' in selected_tag_ids %}selected{% endif %}>
+                {{ tag.name }}
+              </option>
+            {% endfor %}
+          </select>
+          <button type="button" id="clear-tags" class="btn btn-ghost small-btn">Clear</button>
+        </div>
+        <div class="help">Hold Ctrl/Cmd to select multiple.</div>
+      </div>
+
+      <!-- Actions -->
+      <div class="fcell span-4 actions">
+        <button class="btn btn--primary btn-filter" type="submit">Apply</button>
+        <a class="btn btn-outline btn-filter" href="{% url 'html-filters' %}">Reset</a>
+      </div>
+    </div>
+  </form>
+
+  <!-- Results table -->
+  <div class="table-wrap">
+    <table class="compact">
+      <colgroup>
+        <col style="width:22%">
+        <col style="width:26%">
+        <col class="col-tags" style="width:20%">
+        <col style="width:10%">
+        <col style="width:12%">
+        <col style="width:10%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="center">Open list detail</th>
+          <th class="center">Open task detail</th>
+          <th class="center">Tags</th>
+          <th class="center">Priority</th>
+          <th class="center">Due date</th>
+          <th class="center">Done</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in tasks %}
+          <tr>
+            <td class="center">
+              <a class="chip" style="--hue: {{ t.list.name|list_hue }};"
+                 href="{% url 'html-list_detail' t.list.pk %}">{{ t.list.name }}</a>
+            </td>
+            <td class="center">
+              <a class="chip" style="--hue: {{ t.list.name|list_hue }};"
+                 href="{% url 'html-task_detail' t.pk %}">{{ t.title }}</a>
+            </td>
+            <td class="col-tags">
+              {% if t.tags.all|length %}
+                <div class="tag-row">
+                  {% for tag in t.tags.all %}
+                    <span class="tag-chip"><span class="tag-hash">#</span>{{ tag.name }}</span>
+                  {% endfor %}
+                </div>
+              {% else %}—{% endif %}
+            </td>
+            <td class="center">
+              <span class="flag prio-{{ t.priority }}" title="{{ t.get_priority_display }}"></span>
+            </td>
+            <td class="center">{{ t.due_date|date:"M. d, Y"|default:"—" }}</td>
+            <td class="center">{% if t.is_completed %}✓{% else %}—{% endif %}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="empty">No tasks match your filters.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Clear only the tags multi-select (click Apply afterwards to submit filters)
+  (function () {
+    var clearBtn = document.getElementById('clear-tags');
+    var tagsSelect = document.getElementById('tags');
+    if (clearBtn && tagsSelect) {
+      clearBtn.addEventListener('click', function () {
+        Array.from(tagsSelect.options).forEach(function (o) { o.selected = false; });
+      });
+    }
+  })();
+</script>
+{% endblock %}

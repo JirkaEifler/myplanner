@@ -1,10 +1,20 @@
+"""DRF serializers for the Planner API.
+
+Includes basic ModelSerializers for:
+- TypeToDoList
+- Task
+- Reminder
+- Tag
+- Event
+"""
+
 from rest_framework import serializers
 from .models import TypeToDoList, Task, Reminder, Tag, Event
 
 
 class TypeToDoListSerializer(serializers.ModelSerializer):
-    """Convert TypeToDoList model to/from JSON for the API."""
-    owner = serializers.ReadOnlyField(source="owner.username")  # show username instead of ID
+    """Serialize/deserialize TypeToDoList objects for the API."""
+    owner = serializers.ReadOnlyField(source="owner.username")
 
     class Meta:
         model = TypeToDoList
@@ -12,7 +22,7 @@ class TypeToDoListSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    """Convert Task model to/from JSON for the API."""
+    """Serialize/deserialize Task objects for the API."""
     owner = serializers.ReadOnlyField(source="owner.username")
 
     class Meta:
@@ -21,7 +31,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class ReminderSerializer(serializers.ModelSerializer):
-    """Convert Reminder model to/from JSON for the API."""
+    """Serialize/deserialize Reminder objects for the API."""
 
     class Meta:
         model = Reminder
@@ -29,7 +39,7 @@ class ReminderSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    """Convert Tag model to/from JSON for the API."""
+    """Serialize/deserialize Tag objects for the API."""
 
     class Meta:
         model = Tag
@@ -37,7 +47,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
-    """Convert Event model to/from JSON for the API."""
+    """Serialize/deserialize Event objects for the API."""
 
     class Meta:
         model = Event

@@ -1,6 +1,8 @@
+/* Styling for Task Detail page */
+
 /* ===== Wrapper ===== */
 .detail-wrap {
-  max-width: 760px;     /* stejné jako dřív, drží obsah příjemně úzký */
+  max-width: 760px;
   margin: 0 auto;
 }
 
@@ -16,7 +18,7 @@
 /* ===== Key–value grid ===== */
 .detail-card .row {
   display: grid;
-  grid-template-columns: 180px 1fr;  /* klíč vlevo, hodnota vpravo */
+  grid-template-columns: 180px 1fr;
   gap: 12px;
   align-items: center;
   padding: 12px 0;
@@ -31,21 +33,19 @@
 }
 .v { color: #111827; }
 
-/* ===== Actions (tlačítka pod kartou) ===== */
+/* ===== Actions (buttons under card) ===== */
 .actions {
   display: flex;
   gap: 12px;
   justify-content: center;
   margin-top: 16px;
 }
-
-/* Volitelné jemné sjednocení s .btn z base.css (nepřebíjí vzhled) */
 .actions .btn {
   border-radius: 999px;
   font-weight: 700;
 }
 
-/* ===== Badges (specifické pro detail) ===== */
+/* ===== Badges ===== */
 .badge {
   display: inline-block;
   padding: 6px 12px;
@@ -78,11 +78,34 @@
   color: #6b7280;
 }
 
-/* ===== Responsivita ===== */
+/* ===== Tags row ===== */
+.tag-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+.tag-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  font-size: 0.85rem;
+  text-align: center;
+  white-space: nowrap;
+}
+.tag-hash {
+  color: #9ca3af;
+  margin-right: 2px;
+}
+
+/* ===== Responsive ===== */
 @media (max-width: 560px) {
   .detail-card { padding: 16px 16px; }
   .detail-card .row {
-    grid-template-columns: 1fr;   /* klíč nad hodnotu */
+    grid-template-columns: 1fr;
     gap: 6px;
   }
   .k { text-align: left; }

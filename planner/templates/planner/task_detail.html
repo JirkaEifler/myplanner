@@ -1,79 +1,152 @@
+{# Template: task_detail.html
+   Purpose: Detailed view of a single task.
+   Displays task info, reminders, optional event, and comments with add/delete functionality. #}
+
 {% extends "planner/base.html" %}
 {% load static %}
-{% load planner_extras %}
 {% block title %}Task detail – MyPlanner{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'planner/css/forms.css' %}?v=12">
+<link rel="stylesheet" href="{% static 'planner/css/tasks.css' %}?v=7">
+<style>
+  /* Reminders mini styles */
+  .rem-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;margin-top:16px;}
+  .rem-row{display:flex;justify-content:space-between;align-items:center;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;margin:8px 0;background:#fafafa}
+  .rem-when{font-weight:700}
+  .rem-form{display:grid;grid-template-columns:1fr minmax(160px, 260px) auto;gap:10px;margin-top:8px}
+  .rem-form input[type="datetime-local"], .rem-form input[type="text"]{width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;outline:none;}
+
+  /* Comments mini styles */
+  .c-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;margin-top:20px;max-width:860px;margin-left:auto;margin-right:auto;}
+  .c-item{border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;background:#fafafa}
+  .hstack{display:flex;gap:8px;align-items:center;}
+  .small-btn{padding:6px 10px;font-size:.9rem;}
+  .muted{color:#6b7280;}
+</style>
+{% endblock %}
+
 {% block content %}
-  <h1>Task detail</h1>
+<h1>Task detail</h1>
 
-  <div class="table-wrap" style="max-width:720px;margin:0 auto;">
-    <table class="compact">
-      <colgroup>
-        <col style="width:30%;">
-        <col style="width:70%;">
-      </colgroup>
-      <tbody>
-        <tr>
-          <th>Title</th>
-          <td>{{ task.title }}</td>
-        </tr>
-        <tr>
-          <th>Description</th>
-          <td>{{ task.description|linebreaksbr|default:"—" }}</td>
-        </tr>
+<table class="table detail">
+  <tr><th>Title</th><td>{{ task.title }}</td></tr>
+  <tr><th>Description</th><td>{{ task.description|linebreaksbr }}</td></tr>
+  <tr><th>Priority</th><td>Priority {{ task.priority }}</td></tr>
+  <tr><th>Tags</th><td>
+    {% for t in task.tags.all %}
+      <span class="tag-chip"># {{ t.name }}</span>
+    {% empty %}—{% endfor %}
+  </td></tr>
+  <tr><th>List</th><td><span class="badge">{{ task.list.name }}</span></td></tr>
+  <tr><th>Due date</th><td>{% if task.due_date %}{{ task.due_date|date:"d.m.Y" }}{% else %}—{% endif %}</td></tr>
+  <tr><th>Completed</th><td>{% if task.is_completed %}Yes{% else %}No{% endif %}</td></tr>
+</table>
 
-        <tr>
-          <th>Priority</th>
-          <td>
-            <span class="flag prio-{{ task.priority }}">
-              {{ task.get_priority_display }}
-            </span>
-          </td>
-        </tr>
+<div class="form-actions" style="justify-content:center;gap:12px;margin-top:16px;">
+  <a class="btn btn--primary" href="{% url 'html-task_edit' task.pk %}">Edit</a>
+  <a class="btn btn-outline btn--danger" href="{% url 'html-task_delete' task.pk %}">Delete</a>
+  {% if back_url %}
+    <a class="btn btn-outline" href="{{ back_url }}">Back</a>
+  {% else %}
+    <a class="btn btn-outline" href="{% url 'html-task_list' %}">Back</a>
+  {% endif %}
+</div>
 
-        <tr>
-          <th>Tags</th>
-          <td>
-            {% if task.tags.exists %}
-              {% for tag in task.tags.all %}
-                <span class="chip" style="--hue: 200">{{ tag.name }}</span>
-              {% endfor %}
-            {% else %}
-              —
-            {% endif %}
-          </td>
-        </tr>
+<!-- ===== Reminders ===== -->
+<div class="rem-card">
+  <h3 style="margin:0 0 6px;">Reminders</h3>
 
-        <tr>
-          <th>List</th>
-          <td>
-            <a class="chip"
-               style="--hue: {{ task.list.name|list_hue }};"
-               href="{% url 'html-list_detail' task.list.pk %}">
-              {{ task.list.name }}
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <th>Due date</th>
-          <td>{{ task.due_date|date:"M. d, Y"|default:"—" }}</td>
-        </tr>
-        <tr>
-          <th>Completed</th>
-          <td>{% if task.is_completed %}Yes{% else %}No{% endif %}</td>
-        </tr>
-      </tbody>
-    </table>
+  {% if reminders %}
+    {% for r in reminders %}
+      <div class="rem-row">
+        <div>
+          <div class="rem-when">{{ r.remind_at|date:"Y-m-d H:i" }}</div>
+          {% if r.note %}<div class="muted">{{ r.note }}</div>{% endif %}
+        </div>
+        <form method="post" action="{% url 'html-reminder_delete' r.id %}">
+          {% csrf_token %}
+          <button class="btn btn-outline small-btn" type="submit">Delete</button>
+        </form>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="muted">No reminders yet.</div>
+  {% endif %}
 
-    <div class="action-group" style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
-      <a class="btn" href="{% url 'html-task_edit' task.pk %}">Edit</a>
-      <a class="btn btn-danger" href="{% url 'html-task_delete' task.pk %}">Delete</a>
+  <!-- Add new reminder -->
+  <form method="post" action="{% url 'html-reminder_add' task.pk %}" class="rem-form">
+    {% csrf_token %}
+    {{ rform.remind_at }}
+    {{ rform.note }}
+    <button class="btn btn--primary" type="submit">Add</button>
+  </form>
+</div>
 
-      {% if back_url %}
-        <a class="btn" href="{{ back_url }}">Back</a>
-      {% else %}
-        <a class="btn" href="{% url 'html-task_list' %}">Back</a>
-      {% endif %}
+<!-- ===== Event (start–end) ===== -->
+<div class="rem-card">
+  <h3 style="margin:0 0 6px;">Event</h3>
+
+  {% if event %}
+    <div class="rem-row">
+      <div>
+        <div class="rem-when">
+          {{ event.start_time|date:"Y-m-d H:i" }} – {{ event.end_time|date:"Y-m-d H:i" }}
+        </div>
+      </div>
+      <div class="hstack">
+        <a class="btn btn-outline" href="{% url 'html-event_edit' event.pk %}">Edit</a>
+        <a class="btn btn-outline btn--danger" href="{% url 'html-event_delete' event.pk %}">Delete</a>
+      </div>
     </div>
-  </div>
+  {% else %}
+    <form method="post" action="{% url 'html-event_add' task.pk %}" class="rem-form">
+      {% csrf_token %}
+      {{ eform.start_time }}
+      {{ eform.end_time }}
+      <button class="btn btn--primary" type="submit">Add event</button>
+    </form>
+  {% endif %}
+</div>
+
+<hr style="border:none;height:1px;background:#eee;margin:24px 0 16px;" />
+
+<!-- ===== Comments ===== -->
+<h2 style="text-align:center;margin:0 0 12px;">Comments</h2>
+
+<div class="c-card">
+  <!-- Add comment -->
+  <form method="post" action="{% url 'html-comment_add' task.pk %}" class="form-row span-2" style="margin-bottom:12px;">
+    {% csrf_token %}
+    <label for="id_comment_body" style="display:block;margin-bottom:6px;">Add a comment</label>
+    <textarea id="id_comment_body" name="body" rows="3" placeholder="Write a note…" style="width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;"></textarea>
+    <div class="form-actions" style="margin-top:10px;">
+      <button class="btn btn--primary" type="submit">Add comment</button>
+    </div>
+  </form>
+
+  <!-- Comments list -->
+  {% if task.comments.exists %}
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      {% for c in task.comments.all %}
+        <div class="c-item">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;">
+            <div class="muted" style="font-size:.95rem;">
+              <strong>{{ c.author }}</strong> • {{ c.created_at|date:"Y-m-d H:i" }}
+            </div>
+            {% if c.author_id == request.user.id or task.owner_id == request.user.id %}
+              <form method="post" action="{% url 'html-comment_delete' c.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline small-btn">Delete</button>
+              </form>
+            {% endif %}
+          </div>
+          <div style="margin-top:6px;white-space:pre-wrap;">{{ c.body }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted" style="text-align:center;margin:8px 0 0;">No comments yet.</p>
+  {% endif %}
+</div>
 {% endblock %}

@@ -1,30 +1,29 @@
+{# Template: typelist_form.html
+   Purpose: Form for creating or editing a to-do list.
+   Renders fields and provides Save/Create with Back navigation. #}
+
 {% extends "planner/base.html" %}
 {% block nav_lists %}is-active{% endblock %}
 
-<!-- Titulek stránky podle režimu -->
 {% block title %}{% if is_edit %}Edit list{% else %}Create list{% endif %} – MyPlanner{% endblock %}
 
 {% block content %}
-  <!-- Nadpis podle režimu -->
   <h1>{% if is_edit %}Edit list{% else %}Create list{% endif %}</h1>
 
-  <!-- Plátno se standardní max šířkou -->
   <div class="table-wrap" style="max-width:520px;margin:0 auto;">
     <form method="post" novalidate>
       {% csrf_token %}
 
-      <!-- Jednoduché vykreslení polí formuláře -->
+      <!-- Render form fields -->
       {{ form.as_p }}
 
-      <!-- Akce formuláře: Submit + Back (bez JS) -->
+      <!-- Form actions -->
       <div style="display:flex; gap:10px; justify-content:center; margin-top:10px;">
         <button class="btn btn--primary" type="submit">
           {% if is_edit %}Save{% else %}Create{% endif %}
         </button>
 
-        <!-- Back bez history:
-           - při editaci zpět na detail daného listu
-           - při vytváření zpět na přehled všech listů -->
+        <!-- Back link: to detail if editing, or to list index if creating -->
         {% if is_edit and form.instance.pk %}
           <a class="btn btn-outline" href="{% url 'html-list_detail' form.instance.pk %}">Back</a>
         {% else %}

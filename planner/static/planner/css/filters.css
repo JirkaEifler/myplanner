@@ -1,0 +1,108 @@
+/* ===== Filter card layout ===== */
+.filter-card {
+  max-width: 980px;
+  margin: 8px auto 20px;
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 8px 26px rgba(0,0,0,.06);
+}
+
+/* ===== Grid system ===== */
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px 16px;
+}
+.fcell { display: flex; flex-direction: column; }
+.span-2 { grid-column: span 2; }
+.span-4 { grid-column: span 4; }
+
+/* ===== Labels and form controls ===== */
+.flabel {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.finput, .fselect {
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 0 10px;
+  background: #f9fafb;
+  outline: none;
+}
+.finput:focus, .fselect:focus {
+  border-color: #c4b5fd;
+  box-shadow: 0 0 0 3px #ede9fe;
+  background: #fff;
+}
+
+.fmultiselect {
+  min-height: 120px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 6px;
+}
+
+.hstack { display: flex; align-items: center; gap: 10px; }
+.help { margin-top: 6px; font-size: .85rem; color: #6b7280; }
+
+/* ===== Actions ===== */
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+/* ===== Table spacing ===== */
+.table-wrap {
+  max-width: 1080px;
+  margin: 10px auto 30px;
+}
+
+/* ===== Tags (reused from list detail) ===== */
+.col-tags { text-align: center; vertical-align: middle; }
+.tag-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+.tag-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  font-size: .85rem;
+  white-space: nowrap;
+}
+.tag-hash { color: #9ca3af; margin-right: 2px; }
+
+/* ===== Responsive adjustments ===== */
+@media (max-width: 920px) {
+  .filters-grid { grid-template-columns: repeat(2, 1fr); }
+  .span-4 { grid-column: span 2; }
+}
+@media (max-width: 560px) {
+  .filters-grid { grid-template-columns: 1fr; }
+  .span-2, .span-4 { grid-column: 1 / -1; }
+}
+
+/* ===== Buttons (Apply & Reset, unified size) ===== */
+.btn-wide {
+  min-width: 120px;
+  text-align: center;
+  display: inline-block;
+}
+
+.btn-filter {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+}

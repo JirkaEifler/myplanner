@@ -1,3 +1,7 @@
+{# Template: base.html
+   Purpose: Global layout for MyPlanner (navigation, flash messages, content blocks).
+   Provides structure and shared assets for all pages. #}
+
 {% load static %}
 <!doctype html>
 <html lang="en">
@@ -5,29 +9,33 @@
   <meta charset="utf-8" />
   <title>{% block title %}MyPlanner{% endblock %}</title>
 
-  <!-- hlavní globální styly (base.css) -->
+  <!-- Global styles -->
   <link rel="stylesheet" href="{% static 'planner/css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'planner/css/forms.css' %}?v=3">
 
-  <!-- podle potřeby lze vložit další CSS soubory (lists.css, tasks.css, …) -->
+  <!-- Page-specific styles -->
   {% block extra_css %}{% endblock %}
 </head>
 <body>
   <div class="container">
-    <!-- horní navigační menu -->
+    <!-- Header / navigation -->
     <header>
       <div class="brand">MyPlanner</div>
       <nav>
-        <!-- každá položka menu má svůj blok – umožňuje zvýraznění aktivní záložky -->
+        <!-- Each item uses its own block to mark the active tab -->
         <a class="nav-btn {% block nav_home %}{% endblock %}"  href="{% url 'home' %}">Home</a>
         <a class="nav-btn {% block nav_lists %}{% endblock %}" href="{% url 'html-list_index' %}">To-Do-Lists</a>
         <a class="nav-btn {% block nav_tasks %}{% endblock %}" href="{% url 'html-task_list' %}">All My Tasks</a>
 
-        <!-- Admin vidí odkaz do administrace -->
+        {% if user.is_authenticated %}
+          <a class="nav-btn {% block nav_filters %}{% endblock %}" href="{% url 'html-filters' %}">Filters</a>
+          <a class="nav-btn {% block nav_settings %}{% endblock %}" href="{% url 'html-settings' %}">Settings</a>
+        {% endif %}
+
         {% if user.is_superuser %}
           <a class="nav-btn {% block nav_admin %}{% endblock %}" href="/admin/">Admin</a>
         {% endif %}
 
-        <!-- přihlášený uživatel má Logout, nepřihlášený Login -->
         {% if user.is_authenticated %}
           <a class="nav-btn" href="/api-auth/logout/">Logout</a>
         {% else %}
@@ -36,33 +44,31 @@
       </nav>
     </header>
 
-    <!-- flash messages -->
+    <!-- Flash messages -->
     {% if messages %}
-      <div style="margin: 12px 0;">
+      <div style="margin:12px 0;">
         {% for message in messages %}
           <div
             style="
-              padding: 10px 12px;
-              border-radius: 8px;
-              margin-bottom: 8px;
-              border: 1px solid #ddd;
+              padding:10px 12px;
+              border-radius:8px;
+              margin-bottom:8px;
+              border:1px solid #ddd;
               {% if message.tags == 'success' %}background:#effaf0;{% endif %}
               {% if message.tags == 'error' %}background:#fdecea;{% endif %}
               {% if message.tags == 'warning' %}background:#fff4e5;{% endif %}
               {% if message.tags == 'info' %}background:#eef5ff;{% endif %}
             "
-          >
-            {{ message }}
-          </div>
+          >{{ message }}</div>
         {% endfor %}
       </div>
     {% endif %}
 
-    <!-- sem se načítá vlastní obsah jednotlivých stránek -->
+    <!-- Page content -->
     {% block content %}{% endblock %}
   </div>
 
-  <!-- prostor pro doplnění JavaScriptu na konkrétní stránce -->
+  <!-- Page-specific scripts -->
   {% block extra_js %}{% endblock %}
 </body>
 </html>

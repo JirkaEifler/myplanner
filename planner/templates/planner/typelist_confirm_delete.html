@@ -1,20 +1,30 @@
+{# Template: typelist_confirm_delete.html
+   Purpose: Confirmation page for deleting a task list.
+   Asks user for confirmation and provides delete/back actions. #}
+
 {% extends "planner/base.html" %}
-{% block nav_tasks %}is-active{% endblock %}
+{% load static %}
+
 {% block title %}Delete list – MyPlanner{% endblock %}
+{% block nav_lists %}is-active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'planner/css/forms.css' %}?v=12">
+{% endblock %}
 
 {% block content %}
   <h1>Delete list</h1>
 
   <div class="table-wrap" style="max-width:600px;margin:0 auto;">
-    <p>Are you sure you want to delete the list “{{ obj.name }}”?</p>
+    <p style="text-align:center;font-size:1.15rem;">
+      Are you sure you want to delete the list “{{ obj.name }}”?
+    </p>
 
-    <!-- akční tlačítka -->
-    <form method="post">
+    <!-- Confirmation form -->
+    <form method="post" class="form-actions" style="gap:14px;">
       {% csrf_token %}
-      <div class="action-group" style="display:flex;gap:10px;justify-content:center;margin-top:14px;">
-        <button type="submit" class="btn btn-danger">Yes, delete</button>
-        <a class="btn btn-outline" href="{% url 'html-list_index' %}">Back</a>
-      </div>
+      <button type="submit" class="btn btn-outline btn--danger">Yes, delete</button>
+      <a class="btn btn-outline" href="{% url 'html-list_index' %}">Back</a>
     </form>
   </div>
 {% endblock %}

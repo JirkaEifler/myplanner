@@ -1,17 +1,15 @@
-/* home.css
-   Styling for homepage (hero + features)
-*/
+/* Styling for homepage (hero + features) */
 
-/* Hero section */
+/* ===== Hero section ===== */
 .hero {
   text-align: center;
   padding: 3rem 1rem;
-  max-width: 900px;       /* omezení šířky */
-  margin: 0 auto;         /* centrování */
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .hero__text {
-  max-width: 700px;       /* užší textový blok */
+  max-width: 700px;
   margin: 0 auto;
 }
 
@@ -36,7 +34,7 @@
   gap: 1rem;
 }
 
-/* Buttons */
+/* ===== Buttons (landing CTA) ===== */
 .btn {
   display: inline-block;
   padding: 0.6rem 1.2rem;
@@ -66,14 +64,14 @@
   color: #fff;
 }
 
-/* Features section */
+/* ===== Features section ===== */
 .features {
   display: flex;
-  justify-content: center; /* centrování boxů */
+  justify-content: center;
   gap: 1.5rem;
   margin: 3rem auto 0 auto;
   flex-wrap: wrap;
-  max-width: 1000px;      /* omezení šířky */
+  max-width: 1000px;
 }
 
 .feature {

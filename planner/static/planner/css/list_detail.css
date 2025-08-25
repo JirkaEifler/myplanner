@@ -1,6 +1,8 @@
+/* Styling for list detail tables (tasks grouped by list) */
+
 /* ===== Canvas ===== */
 .table-wrap {
-  max-width: 1040px;   /* sjednoceno se všemi tabulkami */
+  max-width: 1040px;
   margin: 0 auto;
 }
 
@@ -8,7 +10,7 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;   /* stejné jako v lists.css a tasks.css */
+  font-size: 0.95rem;
 }
 th, td {
   border: 1px solid #e5e7eb;
@@ -17,10 +19,10 @@ th, td {
 }
 th {
   background: #fafafa;
-  text-align: center;   /* všechny hlavičky vycentrované */
+  text-align: center;
 }
 
-/* Sloupce */
+/* Table columns */
 .col-title { width: 52%; text-align: center; }
 .col-prio  { width: 8%;  text-align: center; }
 .col-date  { width: 20%; text-align: center; }
@@ -42,7 +44,7 @@ th {
   background: hsl(var(--hue, 120) 60% 92%);
   color: #111;
   text-decoration: none;
-  font-size: 0.95rem;   /* stejné jako ostatní tabulky */
+  font-size: 0.95rem;
   transition: background .15s ease, border-color .15s ease, filter .15s ease;
 }
 .chip:hover {
@@ -51,18 +53,17 @@ th {
   text-decoration: underline;
 }
 
-/* ===== Priority flags (stejné jako v tasks.css) ===== */
-.flag::before{
-  content:"⚑";
+/* ===== Priority flags ===== */
+.flag::before {
+  content: "⚑";
   font-size: 16px;
   line-height: 1;
-  display:inline-block;
+  display: inline-block;
 }
-
-.prio-1::before{ color:#ef4444; } /* červená */
-.prio-2::before{ color:#f59e0b; } /* žlutá   */
-.prio-3::before{ color:#3b82f6; } /* modrá   */
-.prio-4::before{ color:#9ca3af; } /* šedá    */
+.prio-1::before { color: #ef4444; }
+.prio-2::before { color: #f59e0b; }
+.prio-3::before { color: #3b82f6; }
+.prio-4::before { color: #9ca3af; }
 
 /* ===== Empty state ===== */
 .empty {
@@ -73,16 +74,46 @@ th {
 
 /* ===== Title chip in List Detail ===== */
 h1 .chip {
-  font-size: 1.6rem;     /* zvětší písmo jen v nadpisu */
-  padding: 0.6em 1.4em;  /* dá tomu víc prostoru */
+  font-size: 1.6rem;
+  padding: 0.6em 1.4em;
 }
 
-/* Done cell */
-.done-cell{
-  text-align:center;
+/* ===== Done cell ===== */
+.done-cell {
+  text-align: center;
 }
-.done-cell input[type="checkbox"]{
+.done-cell input[type="checkbox"] {
   transform: scale(1.25);
   cursor: pointer;
-  accent-color: #16a34a; /* hezká zelená po zaškrtnutí (moderní prohlížeče) */
+  accent-color: #16a34a;
+}
+
+/* ===== Tags column ===== */
+.col-tags {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.tag-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+
+.tag-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  font-size: 0.85rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tag-hash {
+  color: #9ca3af;
+  margin-right: 2px;
 }

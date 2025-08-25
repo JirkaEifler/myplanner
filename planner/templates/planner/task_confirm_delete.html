@@ -1,28 +1,34 @@
+{# Template: task_confirm_delete.html
+   Purpose: Confirmation page for deleting a task.
+   Provides a prompt and form with delete and back actions. #}
+
 {% extends "planner/base.html" %}
+{% load static %}
 
-<!-- Titulek stránky -->
-{% block title %}Delete list – MyPlanner{% endblock %}
-
-<!-- Zvýrazní záložku To‑Do‑Lists v horním menu -->
+{% block title %}Delete task – MyPlanner{% endblock %}
 {% block nav_lists %}is-active{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'planner/css/forms.css' %}?v=12">
+{% endblock %}
+
 {% block content %}
-  <!-- Nadpis stránky -->
-  <h1>Delete list</h1>
+  <h1>Delete task</h1>
 
-  <!-- Potvrzení akce (zobrazuje název listu) -->
-  <p>Are you sure you want to delete the list “{{ list.name }}”?</p>
+  <p style="text-align:center;font-size:1.25rem;margin:14px 0 24px;">
+    Are you sure you want to delete the task
+    <strong>“{{ task.title }}”</strong>?
+  </p>
 
-  <!-- Formulář pro potvrzení mazání -->
-  <form method="post">
+  <!-- Confirmation form -->
+  <form method="post" class="form-actions" style="justify-content:center;gap:14px;">
     {% csrf_token %}
+    <button type="submit" class="btn btn-outline btn--danger">Yes, delete</button>
 
-    <div class="action-group" style="display:flex;gap:10px;justify-content:center;margin-top:14px;">
-      <!-- Potvrdit smazání -->
-      <button type="submit" class="btn btn-danger">Yes, delete</button>
-
-      <!-- Zpět na přehled listů (pevný odkaz, žádná historie) -->
-      <a class="btn btn-outline" href="{% url 'html-list_index' %}">Back</a>
-    </div>
+    {% if request.session.back_url %}
+      <a href="{{ request.session.back_url }}" class="btn btn-outline">Back</a>
+    {% else %}
+      <a href="{% url 'html-task_detail' task.pk %}" class="btn btn-outline">Back</a>
+    {% endif %}
   </form>
 {% endblock %}

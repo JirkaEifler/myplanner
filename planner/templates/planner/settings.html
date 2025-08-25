@@ -1,0 +1,52 @@
+{# Template: settings.html
+   Purpose: Settings page to manage user tags (bulk delete with select-all helper). #}
+
+{% extends "planner/base.html" %}
+{% load static %}
+{% block title %}Settings – MyPlanner{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'planner/css/settings.css' %}?v=3">
+{% endblock %}
+
+{% block content %}
+<h1>Settings</h1>
+
+<div class="table-wrap" style="max-width:860px;margin:0 auto">
+
+  <div class="form-card">
+    <h3>My Tags</h3>
+    <p class="muted">Select tags to delete them permanently from the database.</p>
+
+    <form method="post" id="tags-form">
+      {% csrf_token %}
+      {{ tform.non_field_errors }}
+      <div class="tag-list">
+        {{ tform.as_p }}
+      </div>
+
+      <div class="form-actions" style="gap:12px;justify-content:center;">
+        <button type="button" id="btn-select-all" class="btn btn-outline">Select all</button>
+        <button class="btn btn--primary" type="submit" name="tags-delete">Delete selected tags</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  // "Select all" — check all tag checkboxes in this form
+  const form = document.getElementById('tags-form');
+  const selectAll = document.getElementById('btn-select-all');
+  if (form && selectAll){
+    selectAll.addEventListener('click', ()=>{
+      const boxes = form.querySelectorAll('input[type="checkbox"][name="tags-tags"]');
+      boxes.forEach(cb => cb.checked = true);
+    });
+  }
+})();
+</script>
+{% endblock %}

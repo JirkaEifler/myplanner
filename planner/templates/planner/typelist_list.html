@@ -1,9 +1,13 @@
+{# Template: typelist_list.html
+   Purpose: List view of all to-do lists.
+   Displays each list with task count and action links (add task, edit, delete). #}
+
 {% extends "planner/base.html" %}
 {% block nav_lists %}is-active{% endblock %}
 
 {% load static %}
 {% load planner_extras %}
-{% block title %}To‑Do‑Lists – MyPlanner{% endblock %}
+{% block title %}To-Do-Lists – MyPlanner{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'planner/css/lists.css' %}">
@@ -11,12 +15,11 @@
 
 {% block content %}
 <div class="table-wrap">
-  <h1>To‑Do‑Lists</h1>
+  <h1>To-Do-Lists</h1>
 
   <p><a class="btn" href="{% url 'html-list_create' %}">+ Create new list</a></p>
 
   <table>
-    <!-- pevné rozdělení šířek sloupců, aby se Actions nepřeléval -->
     <colgroup>
       <col class="col-name"    style="width:36%;">
       <col class="col-count"   style="width:16%;">
@@ -33,6 +36,7 @@
     <tbody>
       {% for l in lists %}
         <tr>
+          <!-- List name -->
           <td class="col-name name-cell">
             <div class="title-wrap no-label">
               <a class="chip"
@@ -43,8 +47,10 @@
             </div>
           </td>
 
+          <!-- Task count -->
           <td class="col-count">{{ l.task_count }}</td>
 
+          <!-- Actions -->
           <td class="col-actions">
             <div class="action-group">
               <a class="btn-sm btn-sm--primary" href="{% url 'html-task_create' %}?list={{ l.pk }}">Add task to this list</a>

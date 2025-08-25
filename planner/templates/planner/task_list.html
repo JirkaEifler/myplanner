@@ -1,3 +1,7 @@
+{# Template: task_list.html
+   Purpose: List view of all tasks.
+   Displays tasks with list, tags, priority, due date, completion toggle, and action links. #}
+
 {% extends "planner/base.html" %}
 {% block nav_tasks %}is-active{% endblock %}
 {% load static %}
@@ -5,7 +9,7 @@
 {% block title %}All My Tasks – MyPlanner{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'planner/css/tasks.css' %}?v=4">
+  <link rel="stylesheet" href="{% static 'planner/css/tasks.css' %}?v=5">
 {% endblock %}
 
 {% block content %}
@@ -18,18 +22,20 @@
 
     <table>
       <colgroup>
-        <col class="col-list"    style="width:32%;">
-        <col class="col-title"   style="width:30%;">
+        <col class="col-list"    style="width:24%;">
+        <col class="col-title"   style="width:26%;">
+        <col class="col-tags"    style="width:16%;">
         <col class="col-prio"    style="width:6%;">
-        <col class="col-date"    style="width:20%;">
+        <col class="col-date"    style="width:18%;">
         <col class="col-done"    style="width:10%;">
-        <col class="col-actions" style="width:8%;">
+        <col class="col-actions" style="width:10%;">
       </colgroup>
 
       <thead>
         <tr>
           <th class="col-list">Open list detail</th>
           <th class="col-title">Open task detail</th>
+          <th class="col-tags">Tags</th>
           <th class="col-prio">Priority</th>
           <th class="col-date">Due date</th>
           <th class="col-done">Done</th>
@@ -49,7 +55,7 @@
               </a>
             </td>
 
-            <!-- Task -->
+            <!-- Task title -->
             <td class="col-title">
               <div class="title-wrap">
                 <a class="chip"
@@ -60,7 +66,22 @@
               </div>
             </td>
 
-            <!-- Prio (vlaječka) -->
+            <!-- Task tags -->
+            <td class="col-tags">
+              <div class="tag-row">
+                {% if t.tags.exists %}
+                  {% for tag in t.tags.all %}
+                    <span class="tag-chip"><span class="tag-hash">#</span>{{ tag.name }}</span>
+                  {% empty %}
+                    <span style="color:#9ca3af;">–</span>
+                  {% endfor %}
+                {% else %}
+                  <span style="color:#9ca3af;">–</span>
+                {% endif %}
+              </div>
+            </td>
+
+            <!-- Priority -->
             <td class="col-prio">
               <span class="flag prio-{{ t.priority }}" title="{{ t.get_priority_display }}"></span>
             </td>
@@ -82,21 +103,24 @@
 
             <!-- Actions -->
             <td class="col-actions">
-              <a class="btn-sm" href="{% url 'html-task_edit' t.pk %}">Edit</a>
-              <a class="btn-sm btn-sm--warn" href="{% url 'html-task_delete' t.pk %}">Delete</a>
+              <div class="actions-wrap">
+                <a class="btn-sm" href="{% url 'html-task_edit' t.pk %}">Edit</a>
+                <a class="btn-sm btn-sm--warn" href="{% url 'html-task_delete' t.pk %}">Delete</a>
+              </div>
             </td>
           </tr>
         {% empty %}
           <tr>
-            <td colspan="6" class="empty">No tasks found.</td>
+            <td colspan="7" class="empty">No tasks found.</td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 
-  <!-- AJAX toggle Done -->
+  <!-- ===== AJAX toggle Done ===== -->
   <script>
+    // Get CSRF token from cookies
     function getCookie(name) {
       const value = `; ${document.cookie}`;
       const parts = value.split(`; ${name}=`);
@@ -104,6 +128,7 @@
     }
     const csrftoken = getCookie('csrftoken');
 
+    // Attach toggle event listeners
     document.querySelectorAll('.js-done-toggle').forEach(cb => {
       cb.addEventListener('change', async (e) => {
         const el = e.currentTarget;

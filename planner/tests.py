@@ -1,3 +1,5 @@
-from django.test import TestCase
+"""Test entrypoint for the Django app.
 
-# Create your tests here.
+We use pytest with tests located under planner/tests/.
+This module is intentionally left empty to avoid duplicate discovery by unittest.
+"""

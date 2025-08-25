@@ -1,0 +1,21 @@
+{# Template: event_confirm_delete.html
+   Purpose: Confirmation page for deleting an event.
+   Inherits base.html and shows a yes/no confirmation form. #}
+
+{% extends "planner/base.html" %}
+{% block title %}Delete event – MyPlanner{% endblock %}
+
+{% block content %}
+  <h1>Delete event</h1>
+  <p style="text-align:center;font-size:1.2rem;margin:14px 0 24px;">
+    Are you sure you want to delete the event for task
+    <strong>“{{ event.task.title }}”</strong>?
+  </p>
+
+  {# Confirmation form #}
+  <form method="post" class="form-actions" style="justify-content:center;gap:14px;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline btn--danger">Yes, delete</button>
+    <a href="{% url 'html-task_detail' event.task_id %}" class="btn btn-outline">Back</a>
+  </form>
+{% endblock %}
