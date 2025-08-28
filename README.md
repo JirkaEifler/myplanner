@@ -97,7 +97,7 @@ The project demonstrates both **classic HTML views** (for browser users) and a *
 1. Create a database named my_planner_db.
 2. needed, adjust credentials in my_planner_project/settings.py:
 
-DATABASES = {
+## DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": "127.0.0.1",
