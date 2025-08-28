@@ -1,7 +1,8 @@
 # 🗂️ MyPlanner
 
 **MyPlanner** is a personal task-management web application built with **Django** and **PostgreSQL**.  
-It allows users to create and organize tasks in custom lists, assign priorities and tags, add reminders, track deadlines, and optionally link tasks with events.  
+It allows users to create and organize tasks in:
+custom lists, assign priorities and tags, add reminders, track deadlines, and optionally link tasks with events.  
 The project demonstrates both **classic HTML views** (for browser users) and a **REST API** (for integration with future mobile/React apps).
 
 ---
