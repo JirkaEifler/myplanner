@@ -165,24 +165,22 @@ Auth helper (login/logout UI for DRF): `/api-auth/`
 ⸻
 
 ### 📂 Project Structure
-my_planner_project/
-│
-├─ planner/                    # Main Django app
-│  ├─ templates/planner/       # HTML templates (tasks, lists, filters, settings, etc.)
-│  ├─ static/planner/css/      # Stylesheets
-│  ├─ models.py                # TypeToDoList, Task, Tag, Reminder, Comment, Event
-│  ├─ forms.py                 # TaskForm, TypeToDoListForm, ReminderForm, EventForm, etc.
-│  ├─ views_html.py            # Classic HTML views (login required)
-│  ├─ views.py                 # REST API views (DRF generics)
-│  ├─ urls_html.py             # Routes for HTML UI
-│  ├─ urls.py                  # Routes for REST API
-│  ├─ serializers.py           # DRF ModelSerializers
-│  ├─ templatetags/            # Custom filters (e.g., planner_extras.list_hue)
-│  └─ tests/                   # pytest test cases
-│
-├─ my_planner_project/         # Django project (settings, root urls, wsgi)
-├─ manage.py
-└─ README.md
+	•	my_planner_project/
+	•	planner/ — main Django app
+	•	templates/planner/ — HTML templates (tasks, lists, filters, settings, …)
+	•	static/planner/css/ — stylesheets
+	•	models.py — models: TypeToDoList, Task, Tag, Reminder, Comment, Event
+	•	forms.py — forms: TaskForm, TypeToDoListForm, ReminderForm, EventForm, …
+	•	views_html.py — classic HTML views (login required)
+	•	views.py — REST API views (DRF generics)
+	•	urls_html.py — routes for HTML UI
+	•	urls.py — routes for REST API
+	•	serializers.py — DRF ModelSerializers
+	•	templatetags/ — custom filters (e.g. planner_extras.list_hue)
+	•	tests/ — pytest test cases
+	•	my_planner_project/ — Django project config (settings, root urls, wsgi)
+	•	manage.py
+	•	README.md
 
 ⸻
 
