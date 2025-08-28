@@ -190,7 +190,8 @@ Auth helper (login/logout UI for DRF): `/api-auth/`
 ⸻
 
 ### 📜 License
-This project is proprietary software.
-© 2025 Jiří Eifler. All rights reserved.
-No part of this repository may be copied, modified, distributed, or used without explicit written permission from the author.
+- This project is proprietary software.
+- © 2025 Jiří Eifler. 
+- All rights reserved. 
+- No part of this repository may be copied, modified, distributed, or used without explicit written permission from the author.
 
