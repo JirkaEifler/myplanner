@@ -83,9 +83,9 @@ The project demonstrates both **classic HTML views** (for browser users) and a *
 
 ### 3) Create and activate a virtual environment
 - python -m venv env
-# macOS/Linux
+## macOS/Linux
 - source env/bin/activate
-# Windows
+## Windows
 - env\Scripts\activate
 
 ### 4) Install dependencies
