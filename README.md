@@ -165,10 +165,10 @@ Auth helper (login/logout UI for DRF): `/api-auth/`
 ⸻
 
 ### 📂 Project Structure
-- my_planner_project/
-- │
-- ├─ planner/                    # Main Django app
-- │  ├─ templates/planner/       # HTML templates (tasks, lists, filters, settings, etc.)
+my_planner_project/
+│
+├─ planner/                    # Main Django app
+│  ├─ templates/planner/       # HTML templates (tasks, lists, filters, settings, etc.)
 │  ├─ static/planner/css/      # Stylesheets
 │  ├─ models.py                # TypeToDoList, Task, Tag, Reminder, Comment, Event
 │  ├─ forms.py                 # TaskForm, TypeToDoListForm, ReminderForm, EventForm, etc.
@@ -183,7 +183,6 @@ Auth helper (login/logout UI for DRF): `/api-auth/`
 ├─ my_planner_project/         # Django project (settings, root urls, wsgi)
 ├─ manage.py
 └─ README.md
-
 
 ⸻
 
