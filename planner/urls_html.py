@@ -16,6 +16,7 @@ from . import views_html as views
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("home", views.home, name="home-alias"),
 
     # Tasks
     path("app/tasks", views.html_task_list, name="html-task_list"),
