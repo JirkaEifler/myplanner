@@ -1,27 +1,94 @@
-"""HTML views for MyPlanner: tasks, lists, filters, settings, reminders, comments, events."""
+"""HTML views for the MyPlanner app.
 
+This module provides the classic (server-rendered) HTML views, including:
+- Authentication (login redirector, logout handler, registration)
+- Home (logged-in landing page)
+- [Other sections: tasks, lists, filters, settings, reminders, comments, events]
+"""
+
+# Standard library
 import json
+
+# Django
 from django.contrib import messages
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 from django.views.decorators.http import require_POST
+from django.views.generic import FormView
 
+# Local apps
 from .forms import (
+    CommentForm,
+    EventForm,
+    MyTagsBulkForm,
     TaskForm,
     TypeToDoListForm,
-    CommentForm,
     ReminderForm,
-    MyTagsBulkForm,
-    EventForm,
 )
-from .models import Task, TypeToDoList, Tag, Reminder, Event, Comment
+from .models import Comment, Event, Reminder, Tag, Task, TypeToDoList
 
+
+# ---------- AUTH / LANDING ----------
+
+def landing_redirect(request):
+    """
+    Root redirect:
+    - Anonymous users → login page
+    - Authenticated users → Home
+    """
+    if request.user.is_authenticated:
+        return redirect("home")
+    return redirect("html-login")
+
+
+def html_logout(request):
+    """
+    Log the user out and send them to the login page.
+    Always uses an explicit redirect instead of the class-based LogoutView
+    so the target is unambiguous.
+    """
+    logout(request)
+    return redirect("html-login")
+
+
+class RegisterView(FormView):
+    """
+    Simple registration page based on Django's built-in UserCreationForm.
+    - If the user is already authenticated, redirect to Home (registration is pointless).
+    - On success, create the account and redirect to Login with a success message.
+    """
+    template_name = "planner/auth_register.html"
+    form_class = UserCreationForm
+    success_url = reverse_lazy("html-login")
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("home")
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Account created. Please sign in.")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Please fix the errors below.")
+        return super().form_invalid(form)
+
+
+# ---------- HOME ----------
 
 @login_required
 def home(request):
-    """Render the application landing page (requires login)."""
+    """
+    Home (app landing) for logged-in users.
+    Anonymous users are prevented by @login_required (and also by landing_redirect at '/').
+    """
     return render(request, "planner/home.html")
 
 

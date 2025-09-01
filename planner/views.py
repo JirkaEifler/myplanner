@@ -104,16 +104,38 @@ class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
 # -------------------------- Tag -------------------------
 
 class TagListCreateView(generics.ListCreateAPIView):
-    """List all tags used across the user's tasks or create a new tag."""
+    """
+    API view to list and create user-specific tags.
+    - GET: returns only the tags belonging to the authenticated user.
+    - POST: creates a new tag owned by the authenticated user.
+    """
     serializer_class = TagSerializer
 
     def get_queryset(self):
-        return Tag.objects.filter(tasks__owner=self.request.user).distinct()
+        """
+        Return tags filtered by the current user, ordered by name.
+        Ensures users only see their own tags.
+        """
+        return Tag.objects.filter(owner=self.request.user).order_by("name")
+
+    def perform_create(self, serializer):
+        """
+        Save a new tag and automatically assign ownership
+        to the authenticated user.
+        """
+        serializer.save(owner=self.request.user)
 
 
 class TagDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """Retrieve, update, or delete a single tag used on the user's tasks."""
+    """
+    API view to retrieve, update, or delete a specific user tag.
+    - Ensures that only the owner of the tag can access or modify it.
+    """
     serializer_class = TagSerializer
 
     def get_queryset(self):
-        return Tag.objects.filter(tasks__owner=self.request.user).distinct()
+        """
+        Return only the tags belonging to the authenticated user.
+        Prevents unauthorized access to other users' tags.
+        """
+        return Tag.objects.filter(owner=self.request.user)

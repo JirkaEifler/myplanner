@@ -37,9 +37,10 @@
         {% endif %}
 
         {% if user.is_authenticated %}
-          <a class="nav-btn" href="/api-auth/logout/">Logout</a>
+          <a class="nav-btn" href="{% url 'html-logout' %}">Logout</a>
         {% else %}
-          <a class="nav-btn" href="/api-auth/login/">Login</a>
+          <a class="nav-btn" href="{% url 'html-login' %}">Login</a>
+          <a class="nav-btn" href="{% url 'html-register' %}">Sign up</a>
         {% endif %}
       </nav>
     </header>

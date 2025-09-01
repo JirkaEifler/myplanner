@@ -79,8 +79,15 @@ class Task(models.Model):
         help_text="Primary owner of this task.",
     )
 
+    # many-to-many relation with tags
+    tags = models.ManyToManyField(
+        "Tag",
+        blank=True,
+        related_name="tasks",
+        help_text="Tags associated with this task.",
+    )
+
     class Meta:
-        # Consistent ordering: list name → priority → due date → title
         ordering = ["list__name", "priority", "due_date", "title"]
 
     def __str__(self) -> str:
@@ -122,21 +129,29 @@ class Reminder(models.Model):
 
 
 class Tag(models.Model):
-    """Tag/label that can be attached to many tasks (e.g., Work, Personal)."""
-
-    name = models.CharField(max_length=255, unique=True)
-    tasks = models.ManyToManyField(
-        Task,
+    name = models.CharField(max_length=64)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
         related_name="tags",
-        blank=True,
+        null=False,
+        blank=False,
     )
 
     class Meta:
-        ordering = ["name"]
-        verbose_name = "Tag"
-        verbose_name_plural = "Tags"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["owner", "name"],
+                name="uniq_tag_name_per_owner",
+            )
+        ]
 
-    def __str__(self) -> str:
+    def save(self, *args, **kwargs):
+        if self.name:
+            self.name = self.name.strip().lower()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
         return self.name
 
 

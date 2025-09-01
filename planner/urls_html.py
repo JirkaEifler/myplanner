@@ -1,7 +1,8 @@
-"""HTML URL configuration for the planner app.
+"""HTML URL configuration for the MyPlanner app.
 
 Provides classic HTML views for:
-- Home
+- Authentication (login, logout, register)
+- Home and landing redirect
 - Tasks (list, create, detail, edit, delete, toggle)
 - Lists (list, create, detail, edit, delete)
 - Filters
@@ -12,11 +13,25 @@ Provides classic HTML views for:
 """
 
 from django.urls import path
+from django.contrib.auth.views import LoginView
 from . import views_html as views
 
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("home", views.home, name="home-alias"),
+    # Root – redirect anonymous users to login, authenticated users to Home
+    path("", views.landing_redirect, name="root"),
+    path("home", views.home, name="home"),
+
+    # Authentication
+    path(
+        "auth/login/",
+        LoginView.as_view(
+            template_name="planner/auth_login.html",
+            redirect_authenticated_user=True,
+        ),
+        name="html-login",
+    ),
+    path("auth/logout/", views.html_logout, name="html-logout"),
+    path("auth/register/", views.RegisterView.as_view(), name="html-register"),
 
     # Tasks
     path("app/tasks", views.html_task_list, name="html-task_list"),
