@@ -1,4 +1,4 @@
-# MyPlanner
+# MyPlannerr
 
 > Komplexní webová aplikace pro správu osobních úkolů vytvořená s Django a PostgreSQL
 

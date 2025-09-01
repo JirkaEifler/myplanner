@@ -1,0 +1,6 @@
+Django==5.2.5
+djangorestframework==3.16.1
+psycopg2-binary==2.9.10
+pytest==8.4.1
+pytest-django==4.11.1
+python-dotenv==1.1.1
