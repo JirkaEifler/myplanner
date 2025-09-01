@@ -294,7 +294,7 @@ Before deploying to production:
 ## 📧 Contributing
 
 This is proprietary software. Please contact the author for contribution guidelines and licensing information.
-email: jirka.eifler@gmail.com
+Email: jirka.eifler@gmail.com
 
 ## 📜 License
 
