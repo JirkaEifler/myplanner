@@ -126,7 +126,11 @@ Ensure your development environment includes:
 
 ### Database Configuration
 
-#### Option A: PostgreSQL (Recommended)
+#### Option A: SQLite (Recommended for Quick Start)
+
+If no `.env` file is configured, the application automatically falls back to SQLite with a local `db.sqlite3` file in the project root.
+
+#### Option B: PostgreSQL (Manual Configuration)
 
 1. **Create Database**
    ```sql
@@ -151,10 +155,6 @@ Ensure your development environment includes:
    DB_HOST=127.0.0.1
    DB_PORT=5432
    ```
-
-#### Option B: SQLite (Quick Start / Default)
-
-If no `.env` file is configured, the application automatically falls back to SQLite with a local `db.sqlite3` file in the project root.
 
 ### Application Initialization
 
