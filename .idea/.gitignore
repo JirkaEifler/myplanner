@@ -6,3 +6,29 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual environments
+env/
+venv/
+
+# Django stuff
+db.sqlite3
+media/
+staticfiles/
+
+# IDE / Editor
+.idea/
+.vscode/
+
+# Local environment variables
+.env
+
+# Logs
+*.log

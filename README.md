@@ -92,30 +92,37 @@ The project demonstrates both **classic HTML views** (for browser users) and a *
 - pip install -r requirements.txt
 
 ### 5) Configure PostgreSQL
-1. Create a database named my_planner_db.
-2. needed, adjust credentials in my_planner_project/settings.py:
+Option A: PostgreSQL (recommended for development)
+	1.	Create a database named my_planner_db in PostgreSQL.
+	2.	Copy .env.example to .env:
+```bash
+cp .env.example .env
+```
+	3.	Uncomment and adjust Postgres values in .env:
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=my_planner_db
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_HOST=127.0.0.1
+DB_PORT=5432
 
-## DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-        "NAME": "my_planner_db",
-        "USER": "postgres",
-        "PASSWORD": "your_password",
-    }
-}
+Option B: SQLite (default fallback)
+If .env is missing or Postgres values are not set, the project will run on SQLite automatically.
+A file db.sqlite3 will be created locally in the project root.
 
 ### 6) Apply migrations
-- python manage.py makemigrations
-- python manage.py migrate
-
-### 7) Create a superuser
-- python manage.py createsuperuser
-
+```bash
+python manage.py migrate
+```
+### 7) Optional: Create a superuser (only if you want to access Django Admin):
+```bash
+python manage.py createsuperuser
+```
 ### 8) Run the development server
-- python manage.py runserver
-- Now open http://127.0.0.1:8000/
+```bash
+python manage.py runserver
+```
+Visit: http://127.0.0.1:8000/ → login/register page.
 
 ⸻
 
