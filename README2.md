@@ -1,4 +1,4 @@
-# MyPlanner
+# 🗂️ MyPlanner
 
 > A comprehensive personal task management web application built with Django and PostgreSQL
 
@@ -19,14 +19,14 @@ MyPlanner is a full-featured task management web application that combines the p
 - **Dual Architecture**: Traditional web interface plus REST API for future mobile/frontend integrations
 - **Collaboration Features**: Task comments and shared organizational tools
 
-## Features
+## ✨ Features
 
 ### 🔐 Authentication & Security
 - Secure user registration and authentication using Django's built-in system
 - Session-based authentication with CSRF protection
 - Role-based access control for protected resources
 
-### 📝 Task Management
+### ✅ Task Management
 - **Full CRUD Operations**: Create, read, update, and delete tasks with comprehensive form validation
 - **Status Management**: Real-time task completion toggling using AJAX
 - **Organization Tools**: Assign tasks to custom lists and apply multiple tags
@@ -70,7 +70,7 @@ MyPlanner is a full-featured task management web application that combines the p
 - **Advanced Features**: Built-in pagination, search capabilities, and flexible result ordering
 - **Integration Ready**: Designed for future mobile applications or React frontend integration
 
-## Technical Architecture
+## 🛠️ Technical Architecture
 
 ### Backend Stack
 - **Framework**: Django 5.x with Django REST Framework
@@ -99,7 +99,7 @@ Ensure your development environment includes:
 - **PostgreSQL**: Version 14 or higher (recommended)
 - **Virtual Environment**: Python venv or virtualenv
 
-### Quick Start
+### 🚀 Getting Started
 
 1. **Repository Setup**
    ```bash
@@ -177,7 +177,7 @@ If no `.env` file is configured, the application automatically falls back to SQL
 
 ## Application Structure
 
-### Web Interface Routes
+### 🧭 Web Interface Routes
 
 | Route | Description |
 |-------|-------------|
@@ -188,7 +188,7 @@ If no `.env` file is configured, the application automatically falls back to SQL
 | `/app/settings/` | Tag management and bulk operations |
 | `/admin/` | Django administrative interface |
 
-### REST API Endpoints
+### 🌐 REST API Endpoints
 
 All API endpoints require authentication and are prefixed with `/api/`.
 
@@ -215,7 +215,7 @@ All API endpoints require authentication and are prefixed with `/api/`.
 
 ## Development
 
-### Project Structure
+### 📂 Project Structure
 
 ```
 myplanner/
@@ -240,7 +240,7 @@ myplanner/
 └── README.md                 # This file
 ```
 
-### Running Tests
+### 🧪 Running Tests
 
 Execute the complete test suite:
 
@@ -265,7 +265,7 @@ The project follows Django best practices including:
 
 ## Deployment Considerations
 
-### Security Configuration
+### 🔐 Security Configuration
 
 Before deploying to production:
 
@@ -282,23 +282,20 @@ Before deploying to production:
    - Avoid default PostgreSQL users in production
    - Implement proper network security for database access
 
-### Performance Optimization
+### ⚡️ Performance Optimization
 
 - Configure static file serving for production
 - Implement database connection pooling
 - Consider caching strategies for frequently accessed data
 - Optimize database queries with select_related/prefetch_related
 
-## Contributing
+## 📧 Contributing
 
 This is proprietary software. Please contact the author for contribution guidelines and licensing information.
+email: jirka.eifler@gmail.com
 
-## License
+## 📜 License
 
 © 2025 Jiří Eifler. All rights reserved.
 
 This project is proprietary software. No part of this repository may be copied, modified, distributed, or used without explicit written permission from the author.
-
-## Support
-
-For technical support or feature requests, please contact the development team through the appropriate channels established for this project.
