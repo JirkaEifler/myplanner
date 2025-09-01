@@ -152,7 +152,7 @@ Ensure your development environment includes:
    DB_PORT=5432
    ```
 
-#### Option B: SQLite (Development Fallback)
+#### Option B: SQLite (Quick Start / Default)
 
 If no `.env` file is configured, the application automatically falls back to SQLite with a local `db.sqlite3` file in the project root.
 
