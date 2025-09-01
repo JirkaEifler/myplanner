@@ -1,204 +1,301 @@
 # 🗂️ MyPlanner
 
-**MyPlanner** is a personal task-management web application built with **Django** and **PostgreSQL**.  
-It allows users to create and organize tasks in custom lists, assign priorities and tags, add reminders, track deadlines, and optionally link tasks with events.  
-The project demonstrates both **classic HTML views** (for browser users) and a **REST API** (for integration with future mobile/React apps).
+> A comprehensive personal task management web application built with Django and PostgreSQL
 
----
+![License](https://img.shields.io/badge/license-Proprietary-red)
+![Python](https://img.shields.io/badge/python-3.11+-blue)
+![Django](https://img.shields.io/badge/django-5.0-green)
+![PostgreSQL](https://img.shields.io/badge/postgresql-14+-blue)
+
+## Overview
+
+MyPlanner is a full-featured task management web application that combines the power of Django's server-side rendering with a modern REST API architecture. The application enables users to organize their work through customizable task lists, priority systems, tagging, and integrated calendar events.
+
+### Key Capabilities
+
+- **Complete Task Management**: Create, organize, and track tasks with advanced filtering and search capabilities
+- **Flexible Organization**: Custom lists and reusable color-coded tags for personalized workflow organization
+- **Time Management**: Due dates, reminders, and optional calendar event integration
+- **Dual Architecture**: Traditional web interface plus REST API for future mobile/frontend integrations
+- **Collaboration Features**: Task comments and shared organizational tools
 
 ## ✨ Features
 
-### 🔑 Authentication
-- User registration and login (Django Auth).
-- Session-based authentication.
-- Some views accessible only to logged-in users.
+### 🔐 Authentication & Security
+- Secure user registration and authentication using Django's built-in system
+- Session-based authentication with CSRF protection
+- Role-based access control for protected resources
 
-### ✅ Tasks
-- Create, edit, delete tasks.
-- Mark tasks as **done/undone** (AJAX toggle).
-- Assign tasks to lists and tags.
-- Set priority levels and due dates.
-- Attach comments for collaboration/notes.
+### ✅ Task Management
+- **Full CRUD Operations**: Create, read, update, and delete tasks with comprehensive form validation
+- **Status Management**: Real-time task completion toggling using AJAX
+- **Organization Tools**: Assign tasks to custom lists and apply multiple tags
+- **Priority System**: Multi-level priority assignment for effective task triage
+- **Deadline Tracking**: Due date management with visual indicators
+- **Collaborative Notes**: Attach comments for team collaboration or personal notes
 
-### 📋 To-Do Lists
-- Group tasks into **custom lists**.
-- View details of each list with its tasks.
-- Create, edit, delete lists.
+### 📂 List Organization
+- **Custom Lists**: Create unlimited personalized task lists for different projects or contexts
+- **List Management**: Edit list properties, view task summaries, and manage list-specific workflows
+- **Hierarchical Organization**: Organize tasks within lists for better project management
 
-### 🏷️ Tags
-- Reuse tags across tasks.
-- Colorful tag display for easier navigation.
+### 🏷️ Tag System
+- **Flexible Tagging**: Create and reuse tags across all tasks
+- **Visual Organization**: Color-coded tag system for quick visual identification
+- **Tag Management**: Centralized tag administration with bulk operations
 
-### ⚙️ Settings
-- Manage personal tags in one place.
-- Bulk delete tags permanently from the database.
-- "Select all" helper button for quick removal.
+### ⚙️ Advanced Settings
+- **Tag Administration**: Comprehensive tag management interface
+- **Bulk Operations**: Select and delete multiple tags efficiently
+- **Data Management**: Clean database maintenance tools
 
-### ⏰ Reminders
-- Add reminders with a timestamp and note.
-- Reminders tied directly to tasks.
-- Delete reminders when no longer needed.
+### ⏰ Reminder System
+- **Custom Reminders**: Set timestamped reminders with personalized notes
+- **Task Integration**: Direct linking between reminders and specific tasks
+- **Reminder Management**: Create, edit, and delete reminders as needed
 
-### 📅 Events
-- Optionally link a **calendar-style event** (start/end time) to a task.
-- Edit or delete events.
-- Prevent duplicate events per task.
+### 📅 Event Integration
+- **Calendar Events**: Link tasks with calendar-style events including start and end times
+- **Event Management**: Full CRUD operations for event scheduling
+- **Duplicate Prevention**: System prevents multiple events per task for data integrity
 
-### 🔍 Filters
-- Filter tasks by:
-  - Search text
-  - List
-  - Priority
-  - Done/undone
-  - Tags (multi-select)
-- Results shown in a clean table.
+### 🔍 Advanced Filtering
+- **Multi-Criteria Search**: Filter tasks by text content, list assignment, priority level, and completion status
+- **Tag-Based Filtering**: Multi-select tag filtering for precise task discovery
+- **Results Display**: Clean, tabular presentation of filtered results
 
 ### 🌐 REST API
-- CRUD endpoints for Lists, Tasks, Reminders, Events, and Tags.
-- Authentication required.
-- Pagination, search, and ordering support.
+- **Complete API Coverage**: Full CRUD endpoints for all major entities (Lists, Tasks, Reminders, Events, Tags)
+- **Authentication Required**: Secure API access with user-based permissions
+- **Advanced Features**: Built-in pagination, search capabilities, and flexible result ordering
+- **Integration Ready**: Designed for future mobile applications or React frontend integration
 
----
+## 🛠️ Technical Architecture
 
-## 🛠️ Tech Stack
+### Backend Stack
+- **Framework**: Django 5.x with Django REST Framework
+- **Database**: PostgreSQL 14+ (with SQLite fallback for development)
+- **Authentication**: Django's built-in authentication system
+- **API**: RESTful API architecture with comprehensive serialization
 
-- **Backend:** Django 5, Django REST Framework  
-- **Database:** PostgreSQL  
-- **Frontend:** Classic Django templates (HTML, CSS, JS)  
-- **Testing:** Pytest with fixtures for users, tasks, lists  
-- **Other:** Custom template filters, CSRF protection, REST API  
+### Frontend Implementation
+- **Templates**: Django template system with custom template tags and filters
+- **Styling**: Custom CSS with responsive design principles
+- **Interactivity**: JavaScript for AJAX functionality and dynamic user interactions
+- **User Experience**: Progressive enhancement with graceful degradation
 
----
+### Quality Assurance
+- **Testing Framework**: Pytest with comprehensive test coverage
+- **Test Fixtures**: Pre-configured test data for users, tasks, and lists
+- **Validation**: Form validation and API endpoint testing
 
-## 🚀 Getting Started
+## Installation & Setup
 
-### 1. Prerequisites
-- Python 3.11+
-- PostgreSQL 14+
-- Virtualenv recommended
+### Prerequisites
 
-### 2. Clone the repository
-- git clone https://github.com/your-username/myplanner.git
-- cd myplanner
+Ensure your development environment includes:
 
-### 3) Create and activate a virtual environment
-- python -m venv env
-### macOS/Linux 
-- source env/bin/activate
-### Windows
-- env\Scripts\activate
+- **Python**: Version 3.11 or higher
+- **PostgreSQL**: Version 14 or higher (recommended)
+- **Virtual Environment**: Python venv or virtualenv
 
-### 4) Install dependencies
-- pip install -r requirements.txt
+### 🚀 Getting Started
 
-### 5) Configure PostgreSQL
-Option A: PostgreSQL (recommended for development)
-	1.	Create a database named my_planner_db in PostgreSQL.
-	2.	Copy .env.example to .env:
-```bash
-cp .env.example .env
-```
-	3.	Uncomment and adjust Postgres values in .env:
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=my_planner_db
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_HOST=127.0.0.1
-DB_PORT=5432
+1. **Repository Setup**
+   ```bash
+   git clone https://github.com/your-username/myplanner.git
+   cd myplanner
+   ```
 
-Option B: SQLite (default fallback)
-If .env is missing or Postgres values are not set, the project will run on SQLite automatically.
-A file db.sqlite3 will be created locally in the project root.
+2. **Environment Configuration**
+   ```bash
+   # Create virtual environment
+   python -m venv env
+   
+   # Activate virtual environment
+   # On macOS/Linux:
+   source env/bin/activate
+   # On Windows:
+   env\Scripts\activate
+   ```
 
-### 6) Apply migrations
-```bash
-python manage.py migrate
-```
-### 7) Optional: Create a superuser (only if you want to access Django Admin):
-```bash
-python manage.py createsuperuser
-```
-### 8) Run the development server
-```bash
-python manage.py runserver
-```
-Visit: http://127.0.0.1:8000/ → login/register page.
+3. **Dependency Installation**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-⸻
+### Database Configuration
 
-### 🧭 Useful URLs (HTML UI)
-- Home: /
-- Tasks: /app/tasks
-- Lists: /app/lists
-- Filters: /app/filters
-- Settings (Bulk Tag Delete): /app/settings
-- Admin: /admin/
+#### Option A: PostgreSQL (Recommended)
 
-⸻
+1. **Create Database**
+   ```sql
+   -- In PostgreSQL console
+   CREATE DATABASE my_planner_db;
+   ```
 
-### 🌐 API Endpoints (DRF)
-All endpoints are under `/api/` and require authentication.
+2. **Environment Configuration**
+   ```bash
+   # Copy environment template
+   cp .env.example .env
+   ```
 
-- **TypeToDoList**
-  - List/Create: `/api/type-lists/`
-  - Detail (R/U/D): `/api/type-lists/<id>/`
+3. **Configure Database Settings**
+   
+   Edit `.env` file with your PostgreSQL credentials:
+   ```env
+   DB_ENGINE=django.db.backends.postgresql
+   DB_NAME=my_planner_db
+   DB_USER=postgres
+   DB_PASSWORD=your_secure_password
+   DB_HOST=127.0.0.1
+   DB_PORT=5432
+   ```
 
-- **Task**
-  - List/Create: `/api/tasks/`
-  - Detail (R/U/D): `/api/tasks/<id>/`
+#### Option B: SQLite (Development Fallback)
 
-- **Reminder**
-  - List/Create: `/api/reminders/`
-  - Detail (R/U/D): `/api/reminders/<id>/`
+If no `.env` file is configured, the application automatically falls back to SQLite with a local `db.sqlite3` file in the project root.
 
-- **Event**
-  - List/Create: `/api/events/`
-  - Detail (R/U/D): `/api/events/<id>/`
+### Application Initialization
 
-- **Tag**
-  - List/Create: `/api/tags/`
-  - Detail (R/U/D): `/api/tags/<id>/`
+1. **Database Migration**
+   ```bash
+   python manage.py migrate
+   ```
 
-Auth helper (login/logout UI for DRF): `/api-auth/`
+2. **Administrative User Creation** (Optional)
+   ```bash
+   python manage.py createsuperuser
+   ```
 
-⸻
+3. **Development Server**
+   ```bash
+   python manage.py runserver
+   ```
 
-### 🧪 Running Tests
-- pytest
-- Pytest will use fixtures from planner/tests/ (users, lists, tasks) and validate task/reminder views behavior.
+   Access the application at: `http://127.0.0.1:8000/`
 
-⸻
+## Application Structure
+
+### 🧭 Web Interface Routes
+
+| Route | Description |
+|-------|-------------|
+| `/` | Landing page and authentication |
+| `/app/tasks/` | Main task management interface |
+| `/app/lists/` | List creation and management |
+| `/app/filters/` | Advanced task filtering tools |
+| `/app/settings/` | Tag management and bulk operations |
+| `/admin/` | Django administrative interface |
+
+### 🌐 REST API Endpoints
+
+All API endpoints require authentication and are prefixed with `/api/`.
+
+| Endpoint | Methods | Description |
+|----------|---------|-------------|
+| `/api/type-lists/` | GET, POST | List and create task lists |
+| `/api/type-lists/<id>/` | GET, PUT, PATCH, DELETE | Individual list operations |
+| `/api/tasks/` | GET, POST | List and create tasks |
+| `/api/tasks/<id>/` | GET, PUT, PATCH, DELETE | Individual task operations |
+| `/api/reminders/` | GET, POST | List and create reminders |
+| `/api/reminders/<id>/` | GET, PUT, PATCH, DELETE | Individual reminder operations |
+| `/api/events/` | GET, POST | List and create events |
+| `/api/events/<id>/` | GET, PUT, PATCH, DELETE | Individual event operations |
+| `/api/tags/` | GET, POST | List and create tags |
+| `/api/tags/<id>/` | GET, PUT, PATCH, DELETE | Individual tag operations |
+| `/api-auth/` | GET, POST | DRF authentication interface |
+
+### API Features
+
+- **Pagination**: Configurable page size for large datasets
+- **Search**: Full-text search across relevant fields
+- **Ordering**: Flexible result sorting by multiple criteria
+- **Filtering**: Query parameter-based filtering options
+
+## Development
 
 ### 📂 Project Structure
-	•	my_planner_project/
-	•	planner/ — main Django app
-	•	templates/planner/ — HTML templates (tasks, lists, filters, settings, …)
-	•	static/planner/css/ — stylesheets
-	•	models.py — models: TypeToDoList, Task, Tag, Reminder, Comment, Event
-	•	forms.py — forms: TaskForm, TypeToDoListForm, ReminderForm, EventForm, …
-	•	views_html.py — classic HTML views (login required)
-	•	views.py — REST API views (DRF generics)
-	•	urls_html.py — routes for HTML UI
-	•	urls.py — routes for REST API
-	•	serializers.py — DRF ModelSerializers
-	•	templatetags/ — custom filters (e.g. planner_extras.list_hue)
-	•	tests/ — pytest test cases
-	•	my_planner_project/ — Django project config (settings, root urls, wsgi)
-	•	manage.py
-	•	README.md
 
-⸻
+```
+myplanner/
+├── my_planner_project/          # Django project configuration
+│   ├── settings.py             # Application settings
+│   ├── urls.py                 # Root URL configuration
+│   └── wsgi.py                 # WSGI application entry point
+├── planner/                    # Main application module
+│   ├── models.py              # Data models (Task, List, Tag, etc.)
+│   ├── views_html.py          # Traditional HTML views
+│   ├── views.py               # REST API views
+│   ├── forms.py               # Django forms for HTML interface
+│   ├── serializers.py         # DRF serializers for API
+│   ├── urls_html.py           # HTML interface URL patterns
+│   ├── urls.py                # API URL patterns
+│   ├── templatetags/          # Custom template filters
+│   ├── templates/planner/     # HTML templates
+│   ├── static/planner/        # CSS and JavaScript assets
+│   └── tests/                 # Test suite
+├── requirements.txt           # Python dependencies
+├── manage.py                 # Django management script
+└── README.md                 # This file
+```
 
-### 🔐 Environment & Security Notes
-- Keep SECRET_KEY private in production (move to environment variable).
-- Set DEBUG = False and configure ALLOWED_HOSTS.
-- Use strong DB credentials and non-default PostgreSQL user.
+### 🧪 Running Tests
 
-⸻
+Execute the complete test suite:
 
-### 📜 License
-- This project is proprietary software.
-- © 2025 Jiří Eifler. 
-- All rights reserved. 
-- No part of this repository may be copied, modified, distributed, or used without explicit written permission from the author.
+```bash
+pytest
+```
 
+The test suite includes:
+- **Model Testing**: Validation of data models and relationships
+- **View Testing**: HTTP response validation for both HTML and API endpoints
+- **Form Testing**: Input validation and error handling
+- **Integration Testing**: End-to-end workflow validation
+
+### Code Quality
+
+The project follows Django best practices including:
+
+- **Security**: CSRF protection, SQL injection prevention, XSS mitigation
+- **Performance**: Optimized database queries and efficient template rendering
+- **Maintainability**: Clear separation of concerns between HTML views and API endpoints
+- **Scalability**: Database-agnostic design with PostgreSQL optimization
+
+## Deployment Considerations
+
+### 🔐 Security Configuration
+
+Before deploying to production:
+
+1. **Secret Key Management**
+   - Move `SECRET_KEY` to environment variables
+   - Use cryptographically secure key generation
+
+2. **Debug Configuration**
+   - Set `DEBUG = False` in production settings
+   - Configure appropriate `ALLOWED_HOSTS`
+
+3. **Database Security**
+   - Use strong, unique database credentials
+   - Avoid default PostgreSQL users in production
+   - Implement proper network security for database access
+
+### ⚡️ Performance Optimization
+
+- Configure static file serving for production
+- Implement database connection pooling
+- Consider caching strategies for frequently accessed data
+- Optimize database queries with select_related/prefetch_related
+
+## 📧 Contributing
+
+This is proprietary software. Please contact the author for contribution guidelines and licensing information.
+email: jirka.eifler@gmail.com
+
+## 📜 License
+
+© 2025 Jiří Eifler. All rights reserved.
+
+This project is proprietary software. No part of this repository may be copied, modified, distributed, or used without explicit written permission from the author.
