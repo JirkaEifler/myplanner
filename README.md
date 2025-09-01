@@ -124,13 +124,15 @@ Ensure your development environment includes:
    pip install -r requirements.txt
    ```
 
-### Database Configuration
+### 📂 Database Configuration
 
-#### Option A: SQLite (Recommended for Quick Start)
+#### ⚡️ Option A: SQLite (Recommended for Quick Start)
 
 If no `.env` file is configured, the application automatically falls back to SQLite with a local `db.sqlite3` file in the project root.
 
-#### Option B: PostgreSQL (Manual Configuration)
+---
+
+#### ⚙️ Option B: PostgreSQL (Manual Configuration)
 
 1. **Create Database**
    ```sql
